@@ -1,0 +1,255 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Subscription
+  subscription   Subscription?
+  
+  // Usage tracking
+  usage         Usage?
+  
+  // Generated content
+  rewrites      Rewrite[]
+  contentPieces ContentPiece[]
+  bundles       Bundle[]
+  affiliateLinks AffiliateLink[]
+  
+  // Payments
+  payments      Payment[]
+  invoices      Invoice[]
+  
+  // Analytics
+  events        Event[]
+
+  @@map("users")
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  plan            Plan     @default(FREE)
+  status          SubscriptionStatus @default(ACTIVE)
+  stripeId        String?  @unique
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Usage {
+  id             String @id @default(cuid())
+  userId         String @unique
+  rewrites       Int    @default(0)
+  contentPieces  Int    @default(0)
+  bundles        Int    @default(0)
+  affiliateLinks Int    @default(0)
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("usage")
+}
+
+model Rewrite {
+  id              String   @id @default(cuid())
+  userId          String
+  originalPrompt  String
+  optimizedPrompt String
+  style           String?
+  format          String?
+  context         String?
+  improvements    Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("rewrites")
+}
+
+model ContentPiece {
+  id             String   @id @default(cuid())
+  userId         String
+  niche          String
+  contentType    ContentType
+  tone           String
+  content        String
+  keywords       String[]
+  targetAudience String?
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("content_pieces")
+}
+
+model Bundle {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  price           Float
+  bundleType      BundleType
+  targetAudience  String
+  description     String?
+  products        String[]
+  pricingStrategy String?
+  bundleData      Json
+  salesCopy       Json?
+  marketingMaterials Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bundles")
+}
+
+model AffiliateLink {
+  id              String   @id @default(cuid())
+  userId          String
+  linkId          String   @unique
+  originalUrl     String
+  affiliateUrl    String
+  campaignName    String?
+  commissionRate  Float
+  optimizationData Json?
+  clicks          Int      @default(0)
+  conversions     Int      @default(0)
+  revenue         Float    @default(0)
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clicks_tracking ClickTracking[]
+
+  @@map("affiliate_links")
+}
+
+model ClickTracking {
+  id        String   @id @default(cuid())
+  linkId    String
+  referrer  String?
+  ip        String?
+  userAgent String?
+  timestamp DateTime @default(now())
+
+  affiliateLink AffiliateLink @relation(fields: [linkId], references: [linkId], onDelete: Cascade)
+
+  @@map("click_tracking")
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  stripeId        String   @unique
+  amount          Float
+  currency        String   @default("usd")
+  status          PaymentStatus
+  plan            Plan?
+  productName     String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  userId    String
+  stripeId  String   @unique
+  amount    Float
+  currency  String   @default("usd")
+  status    InvoiceStatus
+  dueDate   DateTime?
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  userId    String
+  event     String
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+  PREMIUM
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  UNPAID
+  TRIAL
+}
+
+enum ContentType {
+  SOCIAL
+  BLOG
+  EMAIL
+  VIDEO
+  MIXED
+}
+
+enum BundleType {
+  COURSE
+  TEMPLATE
+  TOOLKIT
+  MASTERCLASS
+  SOFTWARE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+} 

@@ -1,0 +1,8 @@
+<svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M24 0H116V24H204V0H296C308.15 0 318 9.84974 318 22V216C318 228.15 308.15 238 296 238H24C11.8497 238 2 228.15 2 216V22C2 9.84974 11.8497 0 24 0Z"
+    fill="#2B2B2B"
+    stroke="#444444"
+    stroke-width="2"
+  />
+</svg>

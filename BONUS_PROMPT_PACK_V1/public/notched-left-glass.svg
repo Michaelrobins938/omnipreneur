@@ -1,0 +1,15 @@
+<svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glass" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="atop"/>
+    </filter>
+  </defs>
+  <path
+    d="M24 0H200C204.418 0 208 3.58172 208 8V24H296C308.15 24 318 33.8497 318 46V216C318 228.15 308.15 238 296 238H24C11.8497 238 2 228.15 2 216V24C2 10.7452 12.7452 0 26 0H24Z"
+    fill="#ffffff" fill-opacity="0.12"
+    stroke="#ffffff" stroke-opacity="0.45" stroke-width="1.5"
+    style="backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+    filter="url(#glass)"
+  />
+</svg>

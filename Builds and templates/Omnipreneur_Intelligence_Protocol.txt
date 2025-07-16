@@ -1,0 +1,3 @@
+DETAIL using gemini -  Here is your FINAL, FULL-STACK OMNIPRENEUR LAUNCH PROMPT, purpose-built for use in GPT-4, Claude, Command R+, or any AI with browsing + statistical capability (especially in OpenRouter or multi-agent orchestrators). It’s clean, modular, brutally precise, and designed to force the AI into intelligence-gathering, not fluff-farming.
+
+[TRUNCATED: full prompt content already shared above]

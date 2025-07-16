@@ -1,0 +1,177 @@
+ OBJECTIVE:
+
+Use OpenRouter to assign specific AI models (GPT-4, Claude, Command R+, Mistral) to distinct roles, chain them together logically, and execute the full intelligence-gathering + product build pipeline without manual switching.
+🛠️ PHASE 1: SET UP OPENROUTER ACCESS
+1. Create an OpenRouter account
+
+    Go to: https://openrouter.ai
+
+    Sign up with your preferred email or GitHub
+
+2. Get your API key
+
+    Visit: https://openrouter.ai/docs
+
+    Click "Get API Key"
+
+    Copy and store it securely (you’ll need it for Langchain/n8n setup)
+
+🧱 PHASE 2: BUILD MODEL AGENT MAP
+These are your assigned model roles:
+Role	Model	Function
+Tactical Executor	gpt-4	Execute prompt modules, return structured SOPs
+Narrative Strategist	claude-3-opus	Refine tone, emotional hooks, literary polish
+Data Validator	command-r-plus	BSR scraping, search stats, competitor forensics
+Hook Tester	mistral-large	Generate and test ad angles, hooks, headlines
+🔧 PHASE 3: CHOOSE YOUR ORCHESTRATION TOOL
+
+You have three options:
+✅ Option 1: Langchain (Python, advanced control)
+✅ Option 2: n8n (No-code UI + automation logic)
+✅ Option 3: Custom Script (for fast CLI testing)
+
+We’ll start with n8n, since it’s visual and scalable.
+🌀 PHASE 4: SET UP n8n WORKFLOW (No-Code)
+Step 1: Deploy n8n (Cloud or Local)
+
+    Easiest: https://n8n.cloud
+
+    Free option: Self-host with Docker:
+
+docker run -it --rm \
+ -p 5678:5678 \
+ -e N8N_HOST="localhost" \
+ -e N8N_PORT=5678 \
+ n8nio/n8n
+
+Step 2: Create a new Workflow
+
+    Open localhost:5678 or your cloud dashboard
+
+    Click “New Workflow”
+
+    Name it: Omnipreneur AI Chain
+
+Step 3: Add an HTTP Trigger (Start Node)
+
+    Add → “HTTP Request”
+
+    Method: POST
+
+    URL: /launch-prompt
+
+Step 4: Add “HTTP Request” nodes for OpenRouter
+
+You’ll create one for each model:
+a) GPT-4 Node
+
+    Method: POST
+
+    URL: https://openrouter.ai/api/v1/chat/completions
+
+    Headers:
+
+        Authorization: Bearer YOUR_API_KEY
+
+        Content-Type: application/json
+
+    Body (RAW JSON):
+
+{
+  "model": "openai/gpt-4",
+  "messages": [
+    {"role": "system", "content": "You are the Tactical Executor for a book empire."},
+    {"role": "user", "content": "{{ $json.phase1_input }}"}
+  ]
+}
+
+b) Claude Node
+
+Change "model": "anthropic/claude-3-opus"
+Adjust message input to: "Refine this into a trauma-aware, emotionally literate tone: {{ $json.phase2_input }}"
+c) Command R+ Node
+
+Model: "nousresearch/command-r-plus"
+Role: “Scan BSR, extract estimated monthly sales, search volume, and review counts.”
+d) Mistral Node
+
+Model: "mistralai/mistral-large"
+Task: Generate 10 ad hook variations for ADHD productivity products.
+🔗 PHASE 5: CHAIN THE AGENTS
+
+Use Set + Merge nodes to pass output from one model to the next:
+
+[HTTP Trigger]
+   ↓
+[GPT-4: Phase 1 Scan]
+   ↓
+[Claude: Phase 2 Polish]
+   ↓
+[Command R+: Phase 3 Validation]
+   ↓
+[Mistral: Hook Testing]
+   ↓
+[Return Combined Output]
+
+📦 PHASE 6: JSON AGENT CONFIG TEMPLATE
+
+If you prefer scripting via Langchain/OpenRouter chain, use this template:
+
+[
+  {
+    "agent": "gpt-4",
+    "task": "Scan and list top 10 profitable ebook niches with BSR, competition, pricing, and differentiation.",
+    "input_key": "niche_scan"
+  },
+  {
+    "agent": "claude-3-opus",
+    "task": "Refine tone, emotion, and market appeal of the product concept.",
+    "input_key": "tone_refine"
+  },
+  {
+    "agent": "command-r-plus",
+    "task": "Validate niche using Amazon BSR, Google Trends, and review counts.",
+    "input_key": "data_validate"
+  },
+  {
+    "agent": "mistral-large",
+    "task": "Test ad hooks and write 5 alternative titles and headlines.",
+    "input_key": "ad_testing"
+  }
+]
+
+Use this in a Langchain pipeline or as a payload for a backend orchestrator.
+🚀 PHASE 7: EXECUTE AND TEST
+Initial Test Input (to Trigger Workflow):
+
+{
+  "phase1_input": "Scan for top profitable ADHD, shadow work, and neurodivergent workbook niches. Use BSR, Google Trends, and Publisher Rocket estimates."
+}
+
+Watch the chain fire off through:
+
+    Tactical execution
+
+    Narrative polish
+
+    Real-time validation
+
+    Ad copy testing
+
+📈 PHASE 8: EXPORT & SCALE
+
+    Export final output to Notion or Google Sheets
+
+    Log each phase’s result using Append to Google Sheet or Notion API
+
+    Reuse structure for each product launch
+
+Would you like me to:
+
+    Build the n8n JSON export?
+
+    Package this into a full multi-agent Langchain chain file?
+
+    Set up a Notion log template for outputs?
+
+Let’s fully deploy this beast.

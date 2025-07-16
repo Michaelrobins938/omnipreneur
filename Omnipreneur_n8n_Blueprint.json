@@ -1,0 +1,598 @@
+{
+  "name": "Omnipreneur Protocol - Complete Business Launch Workflow",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Business Goal Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "omnipreneur-input",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "omnipreneur-input-webhook"
+    },
+    {
+      "id": "2",
+      "name": "Parse Business Goal",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "parameters": {
+        "functionCode": "// Parse and structure the business goal\nconst goal = $input.first().json.body.goal;\nconst budget = $input.first().json.body.budget || 'flexible';\nconst timeline = $input.first().json.body.timeline || '90 days';\nconst skills = $input.first().json.body.skills || [];\n\nreturn [{\n  json: {\n    parsedGoal: goal,\n    budget: budget,\n    timeline: timeline,\n    skills: skills,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      }
+    },
+    {
+      "id": "3",
+      "name": "Claude Market Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 200],
+      "parameters": {
+        "url": "https://api.openrouter.ai/v1/chat/completions",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENROUTER_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "anthropic/claude-3-opus"
+            },
+            {
+              "name": "messages",
+              "value": "=[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a master market analyst with 20 years of experience in digital business. Your specialty is identifying untapped opportunities in saturated markets. Provide concise, actionable analysis.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Analyze the market opportunity for: {{ $json.parsedGoal }}. Budget: {{ $json.budget }}, Timeline: {{ $json.timeline }}, Skills: {{ $json.skills.join(', ') }}. Provide 3-5 specific opportunities with competition level, search volume, and monetization potential.\"\n  }\n]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            },
+            {
+              "name": "max_tokens",
+              "value": "1000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "name": "GPT-4 Product Ideation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "parameters": {
+        "url": "https://api.openrouter.ai/v1/chat/completions",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENROUTER_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "openai/gpt-4-turbo"
+            },
+            {
+              "name": "messages",
+              "value": "=[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a creative product development expert who has launched 50+ successful digital products. Generate innovative, profitable product ideas.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Based on this market analysis: {{ $('Claude Market Analysis').first().json.choices[0].message.content }}, generate 5 specific product ideas that can be launched within {{ $json.timeline }}. Include pricing strategy and marketing angle for each.\"\n  }\n]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.7"
+            },
+            {
+              "name": "max_tokens",
+              "value": "1200"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5",
+      "name": "Command R+ Execution Plan",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 600],
+      "parameters": {
+        "url": "https://api.openrouter.ai/v1/chat/completions",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENROUTER_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "cohere/command-r-plus"
+            },
+            {
+              "name": "messages",
+              "value": "=[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a business execution specialist who has helped 200+ entrepreneurs launch profitable ventures. Create detailed, actionable implementation plans.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Create a detailed 90-day launch plan for the best product idea from: {{ $('GPT-4 Product Ideation').first().json.choices[0].message.content }}. Include week-by-week milestones, resource requirements, and success metrics.\"\n  }\n]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.2"
+            },
+            {
+              "name": "max_tokens",
+              "value": "1500"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6",
+      "name": "Mistral Trend Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 800],
+      "parameters": {
+        "url": "https://api.openrouter.ai/v1/chat/completions",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENROUTER_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "mistralai/mistral-large"
+            },
+            {
+              "name": "messages",
+              "value": "=[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a trend analyst who has predicted 20+ major market shifts. Identify emerging opportunities and future-proofing strategies.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Based on the product ideas and execution plan, analyze emerging trends that could impact success. Identify 3 trends to leverage and 2 risks to mitigate.\"\n  }\n]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.6"
+            },
+            {
+              "name": "max_tokens",
+              "value": "800"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7",
+      "name": "Compile Results",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 400],
+      "parameters": {
+        "functionCode": "// Compile all AI analysis results into a comprehensive business plan\nconst marketAnalysis = $('Claude Market Analysis').first().json.choices[0].message.content;\nconst productIdeas = $('GPT-4 Product Ideation').first().json.choices[0].message.content;\nconst executionPlan = $('Command R+ Execution Plan').first().json.choices[0].message.content;\nconst trendAnalysis = $('Mistral Trend Analysis').first().json.choices[0].message.content;\n\nconst businessPlan = {\n  originalGoal: $json.parsedGoal,\n  marketAnalysis: marketAnalysis,\n  productIdeas: productIdeas,\n  executionPlan: executionPlan,\n  trendAnalysis: trendAnalysis,\n  generatedAt: new Date().toISOString(),\n  nextSteps: [\n    'Review market analysis and select top opportunity',\n    'Choose primary product idea and validate demand',\n    'Begin week 1 of execution plan',\n    'Set up tracking for success metrics'\n  ]\n};\n\nreturn [{\n  json: businessPlan\n}];"
+      }
+    },
+    {
+      "id": "8",
+      "name": "Save to Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [1120, 300],
+      "parameters": {
+        "resource": "page",
+        "operation": "create",
+        "pageId": "{{ $env.NOTION_PAGE_ID }}",
+        "title": "=Business Plan: {{ $json.originalGoal }}",
+        "properties": {
+          "properties": {
+            "Name": {
+              "title": [
+                {
+                  "text": {
+                    "content": "=Business Plan: {{ $json.originalGoal }}"
+                  }
+                }
+              ]
+            },
+            "Status": {
+              "select": {
+                "name": "Planning"
+              }
+            },
+            "Priority": {
+              "select": {
+                "name": "High"
+              }
+            }
+          }
+        },
+        "content": {
+          "content": [
+            {
+              "type": "heading_1",
+              "heading_1": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Market Analysis"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.marketAnalysis }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "heading_1",
+              "heading_1": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Product Ideas"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.productIdeas }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "heading_1",
+              "heading_1": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Execution Plan"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.executionPlan }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "heading_1",
+              "heading_1": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Trend Analysis"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.trendAnalysis }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "heading_1",
+              "heading_1": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Next Steps"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "bulleted_list_item",
+              "bulleted_list_item": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.nextSteps[0] }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "bulleted_list_item",
+              "bulleted_list_item": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.nextSteps[1] }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "bulleted_list_item",
+              "bulleted_list_item": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.nextSteps[2] }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "bulleted_list_item",
+              "bulleted_list_item": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "={{ $json.nextSteps[3] }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "9",
+      "name": "Send Email Summary",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1120, 500],
+      "parameters": {
+        "fromEmail": "{{ $env.EMAIL_FROM }}",
+        "toEmail": "={{ $json.email || $env.DEFAULT_EMAIL }}",
+        "subject": "=Your Omnipreneur Business Plan is Ready! 🚀",
+        "text": "=Hi there!\n\nYour complete business plan has been generated and saved to your Notion workspace.\n\n**What you got:**\n- Market analysis with 3-5 opportunities\n- 5 specific product ideas with pricing\n- 90-day execution plan\n- Trend analysis and risk assessment\n\n**Next steps:**\n1. Review the market analysis\n2. Choose your primary product idea\n3. Start week 1 of your execution plan\n4. Set up tracking for your success metrics\n\nYour business plan is waiting for you in Notion!\n\nBest regards,\nThe Omnipreneur Protocol\n\n---\nGenerated at: {{ $json.generatedAt }}",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n        .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n        .highlight { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; }\n        .button { display: inline-block; background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>🚀 Your Business Plan is Ready!</h1>\n            <p>Complete analysis and execution strategy generated</p>\n        </div>\n        <div class=\"content\">\n            <h2>What you just unlocked:</h2>\n            <div class=\"highlight\">\n                <ul>\n                    <li><strong>Market Analysis:</strong> 3-5 specific opportunities with competition levels</li>\n                    <li><strong>Product Ideas:</strong> 5 launch-ready concepts with pricing strategies</li>\n                    <li><strong>Execution Plan:</strong> 90-day roadmap with weekly milestones</li>\n                    <li><strong>Trend Analysis:</strong> Future-proofing strategies and risk mitigation</li>\n                </ul>\n            </div>\n            <h2>Your next steps:</h2>\n            <ol>\n                <li>Review the market analysis in your Notion workspace</li>\n                <li>Choose your primary product idea</li>\n                <li>Begin week 1 of your execution plan</li>\n                <li>Set up tracking for your success metrics</li>\n            </ol>\n            <p><strong>Your complete business plan is waiting in Notion!</strong></p>\n            <p style=\"text-align: center;\">\n                <a href=\"https://notion.so\" class=\"button\">Open Notion Workspace</a>\n            </p>\n            <hr>\n            <p style=\"font-size: 12px; color: #666;\">Generated at: {{ $json.generatedAt }}</p>\n        </div>\n    </div>\n</body>\n</html>"
+      }
+    },
+    {
+      "id": "10",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 400],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Your complete business plan has been generated and saved to Notion!\",\n  \"notionPageId\": \"{{ $('Save to Notion').first().json.id }}\",\n  \"emailSent\": true,\n  \"generatedAt\": \"{{ $json.generatedAt }}\",\n  \"nextSteps\": [\n    \"Review market analysis and select top opportunity\",\n    \"Choose primary product idea and validate demand\",\n    \"Begin week 1 of execution plan\",\n    \"Set up tracking for success metrics\"\n  ]\n}"
+      }
+    }
+  ],
+  "connections": {
+    "Business Goal Input": {
+      "main": [
+        [
+          {
+            "node": "Parse Business Goal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Business Goal": {
+      "main": [
+        [
+          {
+            "node": "Claude Market Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GPT-4 Product Ideation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Command R+ Execution Plan",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mistral Trend Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Market Analysis": {
+      "main": [
+        [
+          {
+            "node": "Compile Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4 Product Ideation": {
+      "main": [
+        [
+          {
+            "node": "Compile Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command R+ Execution Plan": {
+      "main": [
+        [
+          {
+            "node": "Compile Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Trend Analysis": {
+      "main": [
+        [
+          {
+            "node": "Compile Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Results": {
+      "main": [
+        [
+          {
+            "node": "Save to Notion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Notion": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Summary": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-07T00:00:00.000Z",
+      "updatedAt": "2025-01-07T00:00:00.000Z",
+      "id": "omnipreneur-protocol",
+      "name": "Omnipreneur Protocol"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-07T00:00:00.000Z",
+  "versionId": "1"
+} 
