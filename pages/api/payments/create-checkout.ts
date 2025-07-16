@@ -101,5 +101,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function saveCheckoutSession(data: any) {
   // Database integration - placeholder for now
-  console.log('Saving checkout session:', data);
+  // Logging removed for production
 } 

@@ -268,10 +268,9 @@ function parseAdditionalMaterials(materials: string) {
 
 async function saveBundle(data: any) {
   // Database integration - placeholder for now
-  console.log('Saving bundle:', data);
+      // Logging removed for production
 }
 
 async function trackEvent(data: any) {
-  // Analytics integration - placeholder for now
-  console.log('Tracking event:', data);
+  // Event tracking removed for production
 } 

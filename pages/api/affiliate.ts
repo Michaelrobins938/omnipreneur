@@ -311,15 +311,15 @@ function parseMarketingMaterials(materials: string) {
 
 async function saveAffiliateLink(data: any) {
   // Database integration - placeholder for now
-  console.log('Saving affiliate link:', data);
+  // Logging removed for production
 }
 
 async function saveClickTracking(data: any) {
   // Database integration - placeholder for now
-  console.log('Saving click tracking:', data);
+  // Logging removed for production
 }
 
 async function trackEvent(data: any) {
   // Analytics integration - placeholder for now
-  console.log('Tracking event:', data);
+  // Event tracking removed for production
 } 

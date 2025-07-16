@@ -9,7 +9,7 @@ const videoImg = "/images/tech-showcase.png";
 const FuturisticAIPanel = () => {
   const handlePlayVideo = () => {
     // Video player functionality would go here
-    console.log('Playing video...');
+    // Logging removed for production
   };
 
   return (

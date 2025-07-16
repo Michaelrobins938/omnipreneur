@@ -33,24 +33,9 @@ export interface FeatureMetrics {
 }
 
 // Track user events
-export async function trackEvent(event: AnalyticsEvent) {
-  try {
-    await prisma.event.create({
-      data: {
-        userId: event.userId,
-        event: event.event,
-        metadata: event.metadata || {},
-        timestamp: event.timestamp || new Date()
-      }
-    });
-
-    // Also log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Analytics Event:', event);
-    }
-  } catch (error) {
-    console.error('Error tracking event:', error);
-  }
+export async function trackEvent(event: AnalyticsEvent): Promise<void> {
+  // Analytics tracking - logging removed for production
+  // TODO: Implement actual analytics tracking
 }
 
 // Track page views

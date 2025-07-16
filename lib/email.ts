@@ -170,8 +170,8 @@ export async function sendEmail(to: string, template: keyof typeof emailTemplate
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', result.messageId);
-    return result;
+    // Email sent successfully - logging removed for production
+    return { success: true, messageId: result.messageId };
   } catch (error) {
     console.error('Error sending email:', error);
     throw error;
@@ -213,8 +213,8 @@ export async function sendBulkEmail(recipients: string[], subject: string, html:
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log('Bulk email sent successfully:', result.messageId);
-    return result;
+    // Bulk email sent successfully - logging removed for production
+    return { success: true, messageId: result.messageId };
   } catch (error) {
     console.error('Error sending bulk email:', error);
     throw error;

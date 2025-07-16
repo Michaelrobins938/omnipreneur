@@ -151,10 +151,10 @@ function calculateSpecificityImprovement(original: string, optimized: string): n
 
 async function saveRewriteHistory(data: any) {
   // Database integration - placeholder for now
-  console.log('Saving rewrite history:', data);
+  // Logging removed for production
 }
 
 async function trackEvent(data: any) {
   // Analytics integration - placeholder for now
-  console.log('Tracking event:', data);
+  // Event tracking removed for production
 } 

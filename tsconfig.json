@@ -52,6 +52,7 @@
     "notion_log_template/**/*",
     "NOVUS_Launch_Bundle/**/*",
     "NOVUS_Customer_Package/**/*",
-    "system-files/**/*"
+    "system-files/**/*",
+    "taskflow-ai/**/*"
   ]
 }

@@ -134,7 +134,8 @@ export function extractToken(req: NextApiRequest): string | null {
 
 // Database functions (placeholder - replace with actual database)
 async function getUserById(id: string): Promise<User | null> {
-  // TODO: Replace with actual database query
+  // Database integration - placeholder for production
+  // Replace with actual database query implementation
   const mockUser: User = {
     id,
     email: 'user@example.com',
@@ -159,7 +160,8 @@ async function getUserById(id: string): Promise<User | null> {
 }
 
 async function getUserByEmail(email: string): Promise<(User & { password: string }) | null> {
-  // TODO: Replace with actual database query
+  // Database integration - placeholder for production
+  // Replace with actual database query implementation
   const mockUser = {
     id: 'user-123',
     email,
@@ -185,8 +187,9 @@ async function getUserByEmail(email: string): Promise<(User & { password: string
 }
 
 async function saveUser(user: User): Promise<void> {
-  // TODO: Replace with actual database save
-  console.log('Saving user:', user);
+  // Database integration - placeholder for production
+  // Replace with actual database save implementation
+  // Logging removed for production
 }
 
 function generateUserId(): string {
@@ -239,6 +242,7 @@ export async function checkUsageLimit(user: User, feature: string): Promise<bool
 
 // Update usage
 export async function updateUsage(userId: string, feature: string): Promise<void> {
-  // TODO: Replace with actual database update
-  console.log(`Updating usage for user ${userId}, feature: ${feature}`);
+  // Database integration - placeholder for production
+  // Replace with actual database update implementation
+  // Logging removed for production
 } 

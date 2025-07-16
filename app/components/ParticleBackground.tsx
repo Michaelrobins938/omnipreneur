@@ -11,7 +11,7 @@ export default function ParticleBackground() {
     initParticlesEngine(async (engine: Engine) => {
       await loadSlim(engine);
     }).then(() => {
-      console.log('Particles engine initialized');
+      // Particles engine initialized - logging removed for production
     });
   }, []);
 
