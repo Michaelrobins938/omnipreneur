@@ -103,7 +103,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Affiliate API error:', error);
     return res.status(500).json({ 
       error: 'Failed to process affiliate request',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' && typeof error === 'object' && error && 'message' in error ? (error as any).message : undefined
     });
   }
 }
@@ -127,7 +127,7 @@ async function generateAffiliateLink(params: AffiliateLinkParams) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.CLAUDE_API_KEY!,
+      'x-api-key': process.env['CLAUDE_API_KEY']!,
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
@@ -182,7 +182,7 @@ Create optimized affiliate link and tracking setup.`
     campaignName,
     commissionRate,
     optimization: optimizationData,
-    trackingUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/affiliate/track?link=${linkId}`
+    trackingUrl: `${process.env['NEXT_PUBLIC_BASE_URL']}/api/affiliate/track?link=${linkId}`
   };
 }
 
@@ -201,7 +201,7 @@ async function generateMarketingMaterials(params: MarketingMaterialsParams) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      'Authorization': `Bearer ${process.env['OPENAI_API_KEY']}`
     },
     body: JSON.stringify({
       model: 'gpt-4',

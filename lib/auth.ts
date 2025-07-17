@@ -28,7 +28,7 @@ export interface AuthResult {
 }
 
 // JWT Secret - should be in environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env['JWT_SECRET'] || 'your-secret-key-change-in-production';
 
 export async function auth(req: NextApiRequest): Promise<User | null> {
   try {

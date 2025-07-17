@@ -3,12 +3,12 @@ import nodemailer from 'nodemailer';
 
 // Configure email transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
+  host: process.env['SMTP_HOST'],
+  port: Number(process.env['SMTP_PORT']),
   secure: true,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env['SMTP_USER'],
+    pass: process.env['SMTP_PASS'],
   },
 });
 
@@ -27,8 +27,8 @@ export async function POST(request: Request) {
 
     // Send email
     await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: process.env.CONTACT_EMAIL,
+      from: process.env['SMTP_FROM'],
+      to: process.env['CONTACT_EMAIL'],
       subject: `New Contact Form Submission from ${name}`,
       text: `
 Name: ${name}
@@ -50,7 +50,7 @@ ${message}
 
     // Send auto-reply
     await transporter.sendMail({
-      from: process.env.SMTP_FROM,
+      from: process.env['SMTP_FROM'],
       to: email,
       subject: 'Thank you for contacting Omnipreneur AI',
       text: `

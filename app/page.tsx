@@ -1,23 +1,18 @@
-import FuturisticAIPanel from './components/FuturisticAIPanel';
-import TechnologyCards from './components/TechnologyCards';
-import FeaturesSection from './components/FeaturesSection';
-import CALShowcase from './components/CALShowcase';
-import ProductShowcase from './components/ProductShowcase';
-import TestimonialsSection from './components/TestimonialsSection';
+import React from 'react';
+import NavBar from './components/NavBar';
+import HeroSection from './components/HeroSection';
+import ProductsSection from './components/ProductsSection';
 import ContactSection from './components/ContactSection';
-import ParticleBackground from './components/ParticleBackground';
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-zinc-950 relative">
-      <ParticleBackground />
-      <FuturisticAIPanel />
-      <TechnologyCards />
-      <CALShowcase />
-      <ProductShowcase />
-      <FeaturesSection />
-      <TestimonialsSection />
+    <main className="min-h-screen bg-zinc-950">
+      <NavBar />
+      <HeroSection />
+      <ProductsSection />
       <ContactSection />
+      <Footer />
     </main>
   );
 } 

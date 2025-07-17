@@ -80,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Registration API error:', error);
     return res.status(500).json({ 
       error: 'Registration failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' && typeof error === 'object' && error && 'message' in error ? (error as any).message : undefined
     });
   }
 } 

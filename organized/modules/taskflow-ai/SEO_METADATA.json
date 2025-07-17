@@ -1,0 +1,108 @@
+{
+  "title": "TaskFlow AI - AI-Powered Task Management for Remote Teams",
+  "description": "Streamline your team's productivity with AI-powered task management, real-time collaboration, and intelligent automation. Built with Next.js 14, TypeScript, and OpenAI integration.",
+  "keywords": [
+    "AI-powered task management",
+    "remote team productivity",
+    "Next.js 14 SaaS starter kit",
+    "task management platform",
+    "AI automation",
+    "team collaboration",
+    "Kanban board",
+    "drag and drop",
+    "TypeScript",
+    "OpenAI integration",
+    "Stripe payment",
+    "PostgreSQL",
+    "Prisma ORM",
+    "Vercel deployment",
+    "mobile responsive",
+    "dark mode",
+    "real-time updates",
+    "analytics dashboard",
+    "workflow automation",
+    "project management"
+  ],
+  "author": "TaskFlow AI Team",
+  "robots": "index, follow",
+  "language": "en",
+  "og:title": "TaskFlow AI - AI-Powered Task Management for Remote Teams",
+  "og:description": "Streamline your team's productivity with AI-powered task management, real-time collaboration, and intelligent automation.",
+  "og:type": "website",
+  "og:url": "https://taskflow-ai.com",
+  "og:image": "https://taskflow-ai.com/og-image.png",
+  "og:image:width": "1200",
+  "og:image:height": "630",
+  "og:image:alt": "TaskFlow AI - AI-powered task management platform for remote teams with drag and drop interface and real-time collaboration",
+  "twitter:card": "summary_large_image",
+  "twitter:title": "TaskFlow AI - AI-Powered Task Management for Remote Teams",
+  "twitter:description": "Streamline your team's productivity with AI-powered task management, real-time collaboration, and intelligent automation.",
+  "twitter:image": "https://taskflow-ai.com/twitter-image.png",
+  "twitter:image:alt": "TaskFlow AI dashboard showing Kanban board with tasks, AI suggestions, and team collaboration features",
+  "canonical": "https://taskflow-ai.com",
+  "structured_data": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TaskFlow AI",
+    "description": "AI-powered task management platform for remote teams",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "29.00",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "TaskFlow AI Team"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "150"
+    }
+  },
+  "alt_text": {
+    "main_thumbnail": "TaskFlow AI - AI-powered task management platform for remote teams with drag and drop interface and real-time collaboration",
+    "dashboard_screenshot": "TaskFlow AI dashboard showing Kanban board with tasks, AI suggestions, and team collaboration features",
+    "mobile_view": "TaskFlow AI mobile responsive design showing task management interface on smartphone",
+    "feature_screenshot": "TaskFlow AI feature overview showing AI automation, team collaboration, and analytics dashboard",
+    "demo_video": "TaskFlow AI demo video showing complete walkthrough of AI-powered task management platform"
+  },
+  "long_tail_keywords": [
+    "AI-powered task management for remote teams",
+    "Next.js 14 SaaS starter kit with AI",
+    "complete task management platform source code",
+    "remote team productivity tool with drag and drop",
+    "SaaS business starter kit with Stripe integration",
+    "TypeScript task management application",
+    "OpenAI integration for team productivity",
+    "Kanban board with AI automation",
+    "real-time task collaboration platform",
+    "mobile responsive task management app"
+  ],
+  "competitor_keywords": [
+    "Asana alternatives",
+    "Monday.com competitors",
+    "Trello replacement",
+    "Notion task management",
+    "ClickUp alternatives",
+    "TeamGantt competitors",
+    "Wrike alternatives",
+    "Basecamp task management",
+    "Slack task integration",
+    "Microsoft Teams task management"
+  ],
+  "local_keywords": [
+    "task management software",
+    "project management tools",
+    "team collaboration platform",
+    "workflow automation software",
+    "productivity tools for teams",
+    "remote work software",
+    "AI automation tools",
+    "SaaS business solutions",
+    "digital product development",
+    "web application development"
+  ]
+} 

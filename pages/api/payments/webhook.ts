@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env['STRIPE_SECRET_KEY']!, {
   apiVersion: '2025-06-30.basil',
 });
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const endpointSecret = process.env['STRIPE_WEBHOOK_SECRET']!;
 
 export const config = {
   api: {
@@ -20,49 +20,47 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const buf = await buffer(req);
-  const sig = req.headers['stripe-signature'] as string;
+  const sig = req.headers['stripe-signature'];
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(buf, sig, endpointSecret);
-  } catch (err: any) {
-    console.error('Webhook signature verification failed:', err.message);
+    event = stripe.webhooks.constructEvent(buf, sig as string, endpointSecret);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err);
     return res.status(400).json({ error: 'Webhook signature verification failed' });
   }
 
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
-        break;
-
-      case 'payment_intent.succeeded':
-        await handlePaymentSucceeded(event.data.object as Stripe.PaymentIntent);
-        break;
-
-      case 'payment_intent.payment_failed':
-        await handlePaymentFailed(event.data.object as Stripe.PaymentIntent);
+        const session = event.data.object as Stripe.Checkout.Session;
+        await handleCheckoutCompleted(session);
         break;
 
       case 'customer.subscription.created':
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionCreated(subscription);
         break;
 
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
+        const updatedSubscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionUpdated(updatedSubscription);
         break;
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        const deletedSubscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionDeleted(deletedSubscription);
         break;
 
       case 'invoice.payment_succeeded':
-        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+        const invoice = event.data.object as Stripe.Invoice;
+        await handlePaymentSucceeded(invoice);
         break;
 
       case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+        const failedInvoice = event.data.object as Stripe.Invoice;
+        await handlePaymentFailed(failedInvoice);
         break;
 
       default:
@@ -70,7 +68,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     return res.status(200).json({ received: true });
-
   } catch (error) {
     console.error('Webhook handler error:', error);
     return res.status(500).json({ error: 'Webhook handler failed' });
@@ -78,193 +75,104 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const { userId, plan, productName } = session.metadata!;
+  const userId = session.metadata?.['userId'];
+  if (!userId) {
+    console.error('No userId in session metadata');
+    return;
+  }
 
-  // Update user subscription
-  await updateUserSubscription({
-    userId,
-    plan,
-    productName,
-    sessionId: session.id,
-    amount: session.amount_total! / 100, // Convert from cents
+  // Update user subscription status
+  await updateUserSubscription(userId, {
     status: 'active',
-    timestamp: new Date()
+    plan: session.metadata?.['plan'] || 'pro',
+    sessionId: session.id,
+    customerId: session.customer as string
   });
-
-  // Send welcome email
-  await sendWelcomeEmail({
-    userId,
-    plan,
-    productName,
-    amount: session.amount_total! / 100
-  });
-
-  console.log(`Checkout completed for user ${userId}, plan: ${plan}`);
-}
-
-async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
-  const { userId, plan, productName } = paymentIntent.metadata;
-
-  // Update payment status
-  await updatePaymentStatus({
-    paymentIntentId: paymentIntent.id,
-    userId,
-    status: 'succeeded',
-    amount: paymentIntent.amount / 100,
-    timestamp: new Date()
-  });
-
-  console.log(`Payment succeeded for user ${userId}, amount: $${paymentIntent.amount / 100}`);
-}
-
-async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-  const { userId, plan, productName } = paymentIntent.metadata;
-
-  // Update payment status
-  await updatePaymentStatus({
-    paymentIntentId: paymentIntent.id,
-    userId,
-    status: 'failed',
-    amount: paymentIntent.amount / 100,
-    timestamp: new Date()
-  });
-
-  // Send failure notification
-  await sendPaymentFailureEmail({
-    userId,
-    plan,
-    productName,
-    amount: paymentIntent.amount / 100
-  });
-
-  console.log(`Payment failed for user ${userId}, amount: $${paymentIntent.amount / 100}`);
 }
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
-  const customerId = subscription.customer as string;
-  const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
-  const userId = customer.metadata.userId;
+  const userId = subscription.metadata?.['userId'];
+  if (!userId) {
+    console.error('No userId in subscription metadata');
+    return;
+  }
 
   // Update user subscription
-  await updateUserSubscription({
-    userId,
-    plan: subscription.metadata.plan || 'pro',
+  await updateUserSubscription(userId, {
     status: 'active',
+    plan: subscription.metadata?.['plan'] || 'pro',
     subscriptionId: subscription.id,
-    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-    timestamp: new Date()
+    customerId: subscription.customer as string,
+    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000)
   });
-
-  console.log(`Subscription created for user ${userId}`);
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const customerId = subscription.customer as string;
-  const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
-  const userId = customer.metadata.userId;
+  const userId = subscription.metadata?.['userId'];
+  if (!userId) {
+    console.error('No userId in subscription metadata');
+    return;
+  }
 
   // Update user subscription
-  await updateUserSubscription({
-    userId,
-    plan: subscription.metadata.plan || 'pro',
+  await updateUserSubscription(userId, {
     status: subscription.status,
+    plan: subscription.metadata?.['plan'] || 'pro',
     subscriptionId: subscription.id,
-    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-    timestamp: new Date()
+    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000)
   });
-
-  console.log(`Subscription updated for user ${userId}, status: ${subscription.status}`);
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const customerId = subscription.customer as string;
-  const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
-  const userId = customer.metadata.userId;
+  const userId = subscription.metadata?.['userId'];
+  if (!userId) {
+    console.error('No userId in subscription metadata');
+    return;
+  }
 
-  // Update user subscription
-  await updateUserSubscription({
-    userId,
-    plan: 'free',
+  // Update user subscription to cancelled
+  await updateUserSubscription(userId, {
     status: 'cancelled',
-    subscriptionId: subscription.id,
-    timestamp: new Date()
+    plan: 'free',
+    subscriptionId: subscription.id
   });
-
-  // Send cancellation email
-  await sendCancellationEmail({
-    userId,
-    plan: subscription.metadata.plan || 'pro'
-  });
-
-  console.log(`Subscription cancelled for user ${userId}`);
 }
 
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-  const customerId = invoice.customer as string;
-  const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
-  const userId = customer.metadata.userId;
+async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
 
-  // Update invoice status
-  await updateInvoiceStatus({
-    invoiceId: invoice.id,
-    userId,
-    status: 'paid',
-    amount: invoice.amount_paid / 100,
+  // Log successful payment
+  await logPayment({
+    subscriptionId,
+    amount: invoice.amount_paid,
+    currency: invoice.currency,
+    status: 'succeeded',
     timestamp: new Date()
   });
-
-  console.log(`Invoice payment succeeded for user ${userId}, amount: $${invoice.amount_paid / 100}`);
 }
 
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  const customerId = invoice.customer as string;
-  const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
-  const userId = customer.metadata.userId;
+async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
 
-  // Update invoice status
-  await updateInvoiceStatus({
-    invoiceId: invoice.id,
-    userId,
+  // Log failed payment
+  await logPayment({
+    subscriptionId,
+    amount: invoice.amount_due,
+    currency: invoice.currency,
     status: 'failed',
-    amount: invoice.amount_due / 100,
     timestamp: new Date()
   });
-
-  // Send payment failure notification
-  await sendInvoicePaymentFailureEmail({
-    userId,
-    amount: invoice.amount_due / 100
-  });
-
-  console.log(`Invoice payment failed for user ${userId}, amount: $${invoice.amount_due / 100}`);
 }
 
-// Database functions (placeholders)
-async function updateUserSubscription(data: any) {
-  console.log('Updating user subscription:', data);
+// Database functions (placeholder implementations)
+async function updateUserSubscription(userId: string, data: any) {
+  // Database integration - placeholder for production
+  console.log('Updating user subscription:', { userId, data });
 }
 
-async function updatePaymentStatus(data: any) {
-  console.log('Updating payment status:', data);
-}
-
-async function updateInvoiceStatus(data: any) {
-  console.log('Updating invoice status:', data);
-}
-
-// Email functions (placeholders)
-async function sendWelcomeEmail(data: any) {
-  console.log('Sending welcome email:', data);
-}
-
-async function sendPaymentFailureEmail(data: any) {
-  console.log('Sending payment failure email:', data);
-}
-
-async function sendCancellationEmail(data: any) {
-  console.log('Sending cancellation email:', data);
-}
-
-async function sendInvoicePaymentFailureEmail(data: any) {
-  console.log('Sending invoice payment failure email:', data);
+async function logPayment(data: any) {
+  // Database integration - placeholder for production
+  console.log('Logging payment:', data);
 } 

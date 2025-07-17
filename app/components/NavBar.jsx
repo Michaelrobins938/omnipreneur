@@ -1,5 +1,12 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for PremiumLogo
+const PremiumLogo = dynamic(() => import('./PremiumLogo'), {
+  loading: () => <div className="w-32 h-8 bg-zinc-800 rounded animate-pulse" />,
+  ssr: false
+});
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -28,37 +35,30 @@ const NavBar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-ui-black/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      isScrolled ? 'bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800/50 shadow-2xl' : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center gap-2">
-              <span className="inline-block w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-white text-xl">
-                🧠
-              </span>
-              <span className="font-futuristic text-xl text-white font-bold tracking-wide">
-                Omnipreneur<br />
-                <span className="font-normal text-xs text-muted-text">AI Suite</span>
-              </span>
-            </div>
+            <PremiumLogo />
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <button
                 key={item.label}
                 onClick={() => handleNavigation(item.id)}
-                className="px-4 py-2 text-sm font-futuristic text-white hover:text-blue-400 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-300 relative group"
               >
                 {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
             <button
               onClick={() => handleNavigation('contact')}
-              className="ml-4 px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-futuristic text-sm rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg"
+              className="ml-4 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium text-sm rounded-full hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
             >
               Get Started
             </button>
@@ -68,7 +68,7 @@ const NavBar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-400 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-zinc-300 hover:text-white focus:outline-none transition-colors duration-300"
             >
               <span className="sr-only">Open main menu</span>
               {!isMobileMenuOpen ? (
@@ -86,20 +86,20 @@ const NavBar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 bg-ui-black/95 backdrop-blur-md border-t border-white/10">
+      <div className={`md:hidden transition-all duration-300 ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/50">
           {navItems.map((item) => (
             <button
               key={item.label}
               onClick={() => handleNavigation(item.id)}
-              className="block w-full px-3 py-2 text-base font-futuristic text-white hover:text-blue-400 transition-colors text-left"
+              className="block w-full px-3 py-2 text-base font-medium text-zinc-300 hover:text-white transition-colors text-left"
             >
               {item.label}
             </button>
           ))}
           <button
             onClick={() => handleNavigation('contact')}
-            className="block w-full px-3 py-2 mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-futuristic text-base rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+            className="block w-full px-3 py-2 mt-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium text-base rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-300"
           >
             Get Started
           </button>

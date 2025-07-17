@@ -255,7 +255,7 @@ export async function getFeatureMetrics(): Promise<FeatureMetrics> {
 
     const mostPopularFeatures = featureEvents
       .slice(0, 5)
-      .map(event => event.event.replace('feature_used_', ''));
+      .map((event: { event: string }) => event.event.replace('feature_used_', ''));
 
     return {
       rewritesGenerated: rewrites,

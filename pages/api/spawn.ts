@@ -96,8 +96,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('Content spawn API error:', error);
     return res.status(500).json({ 
-      error: 'Failed to generate content',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: 'Failed to process spawn request',
+      details: process.env.NODE_ENV === 'development' && typeof error === 'object' && error && 'message' in error ? (error as any).message : undefined
     });
   }
 }
@@ -119,7 +119,7 @@ async function generateContentPieces(params: ContentGenerationParams): Promise<s
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      'Authorization': `Bearer ${process.env['OPENAI_API_KEY']}`
     },
     body: JSON.stringify({
       model: 'gpt-4',
@@ -161,7 +161,7 @@ OUTPUT: Return exactly ${count} pieces, each separated by "---". Each piece shou
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.CLAUDE_API_KEY!,
+        'x-api-key': process.env['CLAUDE_API_KEY']!,
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
@@ -194,8 +194,8 @@ Make each piece unique and valuable.`
   // Clean and format content pieces
   return contentPieces
     .slice(0, count)
-    .map(piece => piece.trim())
-    .filter(piece => piece.length > 10);
+    .map((piece: any) => piece.content)
+    .filter((piece: any) => piece && piece.trim().length > 0);
 }
 
 function getFormatRequirements(contentType: string): string {

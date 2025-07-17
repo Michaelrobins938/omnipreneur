@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer';
 
 // Email transporter configuration
-const transporter = nodemailer.createTransporter({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
+const transporter = nodemailer.createTransport({
+  host: process.env['SMTP_HOST'],
+  port: parseInt(process.env['SMTP_PORT'] || '587'),
   secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env['SMTP_USER'],
+    pass: process.env['SMTP_PASS'],
   },
 });
 
@@ -30,7 +30,7 @@ const emailTemplates = {
             <li>Priority support & updates</li>
           </ul>
         </div>
-        <p>Ready to start? <a href="${process.env.NEXT_PUBLIC_BASE_URL}/dashboard" style="color: #667eea;">Access your dashboard</a></p>
+        <p>Ready to start? <a href="${process.env['NEXT_PUBLIC_BASE_URL']}/dashboard" style="color: #667eea;">Access your dashboard</a></p>
         <p>Best regards,<br>The Omnipreneur Team</p>
       </div>
     `
@@ -50,7 +50,7 @@ const emailTemplates = {
           <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
         </div>
         <p>Your account has been upgraded and you now have access to all ${plan} features.</p>
-        <p><a href="${process.env.NEXT_PUBLIC_BASE_URL}/dashboard" style="color: #667eea;">Go to Dashboard</a></p>
+        <p><a href="${process.env['NEXT_PUBLIC_BASE_URL']}/dashboard" style="color: #667eea;">Go to Dashboard</a></p>
         <p>Best regards,<br>The Omnipreneur Team</p>
       </div>
     `
@@ -73,7 +73,7 @@ const emailTemplates = {
             <li>Incorrect card details</li>
           </ul>
         </div>
-        <p><a href="${process.env.NEXT_PUBLIC_BASE_URL}/billing" style="color: #667eea;">Update Payment Method</a></p>
+        <p><a href="${process.env['NEXT_PUBLIC_BASE_URL']}/billing" style="color: #667eea;">Update Payment Method</a></p>
         <p>Need help? Contact our support team.</p>
         <p>Best regards,<br>The Omnipreneur Team</p>
       </div>
@@ -92,7 +92,7 @@ const emailTemplates = {
           <p>You'll continue to have access to your current features until the end of your billing period.</p>
           <p>After that, your account will be downgraded to the free plan.</p>
         </div>
-        <p>Changed your mind? <a href="${process.env.NEXT_PUBLIC_BASE_URL}/billing" style="color: #667eea;">Reactivate your subscription</a></p>
+        <p>Changed your mind? <a href="${process.env['NEXT_PUBLIC_BASE_URL']}/billing" style="color: #667eea;">Reactivate your subscription</a></p>
         <p>Best regards,<br>The Omnipreneur Team</p>
       </div>
     `
@@ -111,7 +111,7 @@ const emailTemplates = {
           <p>You have ${limit - current} uses remaining.</p>
         </div>
         <p>Consider upgrading to unlock unlimited access to all features.</p>
-        <p><a href="${process.env.NEXT_PUBLIC_BASE_URL}/pricing" style="color: #667eea;">View Plans</a></p>
+        <p><a href="${process.env['NEXT_PUBLIC_BASE_URL']}/pricing" style="color: #667eea;">View Plans</a></p>
         <p>Best regards,<br>The Omnipreneur Team</p>
       </div>
     `
@@ -125,7 +125,7 @@ const emailTemplates = {
         <p>Hi ${userName},</p>
         <p>You requested a password reset for your Omnipreneur account.</p>
         <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
-          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}" 
+          <a href="${process.env['NEXT_PUBLIC_BASE_URL']}/reset-password?token=${resetToken}" 
              style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">
             Reset Password
           </a>
@@ -163,7 +163,7 @@ export async function sendEmail(to: string, template: keyof typeof emailTemplate
     const { subject, html } = templateResult;
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@omnipreneur.com',
+      from: process.env['SMTP_FROM'] || 'noreply@omnipreneur.com',
       to,
       subject,
       html
@@ -206,7 +206,7 @@ export async function sendPasswordResetEmail(userData: { email: string; name: st
 export async function sendBulkEmail(recipients: string[], subject: string, html: string) {
   try {
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@omnipreneur.com',
+      from: process.env['SMTP_FROM'] || 'noreply@omnipreneur.com',
       bcc: recipients,
       subject,
       html
@@ -231,7 +231,7 @@ export async function sendVerificationEmail(userData: { email: string; name: str
         <p>Hi ${userData.name},</p>
         <p>Please verify your email address to complete your Omnipreneur account setup.</p>
         <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
-          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verify-email?token=${userData.verificationToken}" 
+          <a href="${process.env['NEXT_PUBLIC_BASE_URL']}/verify-email?token=${userData.verificationToken}" 
              style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">
             Verify Email
           </a>

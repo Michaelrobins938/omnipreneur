@@ -1,0 +1,29 @@
+Omnipreneur_Preview_Pack/
+│
+├── 🔧 SYSTEM FILES
+│   ├── novus_protocol.md
+│   ├── novus_protocol.yaml
+│   ├── novus_protocol.json
+│   ├── novus_agent_blueprint.json
+│   └── Langchain_n8n_CustomSystem_Steps.md
+│
+├── 🧠 PROMPT CORE
+│   ├── Prompt_Guide.md
+│   ├── Bonus_Prompts.md
+│   ├── Prompt_Deployment_Guide.md
+│   ├── Prompt_Deployment_Guide.pdf
+│
+├── 🔄 ORCHESTRATION
+│   ├── Execution_Flowchart.md
+│   ├── Execution_Flowchart.pdf
+│   └── ROI_Calculator_Notion.md
+│
+├── 💻 BUILDS + TEMPLATES
+│   ├── omnipreneur_prompt_pack.zip
+│   ├── auto_rewrite_engine_project.zip ← (new)
+│   └── Faceless_eBook_Prompt_System.zip
+│
+├── 🌐 OPTIONAL
+│   ├── Notion_Log_Template.md
+│   ├── Claude_Prompt_Rewrite.md
+│   └── Claude_Rewrite_UI_Deployed_URL.txt

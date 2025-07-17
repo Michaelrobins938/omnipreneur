@@ -1,25 +1,61 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for ProfileCard
+const ProfileCard = dynamic(() => import('./ProfileCard'), {
+  loading: () => <div className="flex justify-center items-center h-32"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div></div>,
+  ssr: false
+});
 
 const testimonials = [
   {
     name: 'R. Stephen',
     role: 'Mechanical Engineer',
+    company: 'TechCorp Industries',
     image: '/images/testimonial-1.jpg',
     quote: 'The integration of AI with our robotics systems has revolutionized our manufacturing process. The precision and efficiency gains are remarkable.',
+    socialLinks: {
+      linkedin: '#',
+      twitter: '#'
+    },
+    stats: {
+      projects: 47,
+      experience: '8+ years',
+      location: 'San Francisco'
+    }
   },
   {
     name: 'S. George',
     role: 'IT Professional',
+    company: 'Digital Solutions Inc.',
     image: '/images/testimonial-2.jpg',
     quote: 'Implementation was seamless, and the results exceeded our expectations. The AI-driven automation has transformed our operations completely.',
+    socialLinks: {
+      linkedin: '#',
+      website: '#'
+    },
+    stats: {
+      projects: 23,
+      experience: '5+ years',
+      location: 'New York'
+    }
   },
   {
     name: 'A. Martinez',
     role: 'Operations Director',
+    company: 'Global Manufacturing',
     image: '/images/testimonial-3.jpg',
     quote: 'The future of industrial automation is here. This technology has given us a competitive edge in an increasingly demanding market.',
+    socialLinks: {
+      linkedin: '#',
+      twitter: '#'
+    },
+    stats: {
+      projects: 34,
+      experience: '12+ years',
+      location: 'Chicago'
+    }
   },
 ];
 
@@ -63,15 +99,12 @@ const TestimonialsSection = () => {
         <div className="relative">
           <div className="glass-panel rounded-2xl p-8 md:p-12">
             <div className="flex flex-col md:flex-row items-center gap-8">
-              {/* Profile Image */}
-              <div className="relative w-32 h-32 md:w-40 md:h-40">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-accent opacity-20 blur-xl animate-pulse-slow" />
-                <Image
-                  src={testimonials[activeIndex].image}
-                  alt={testimonials[activeIndex].name}
-                  width={160}
-                  height={160}
-                  className="rounded-full relative z-10 border-2 border-white/10"
+              {/* Profile Card */}
+              <div className="flex-shrink-0">
+                <ProfileCard
+                  {...testimonials[activeIndex]}
+                  variant="default"
+                  className="w-64"
                 />
               </div>
               
@@ -88,6 +121,11 @@ const TestimonialsSection = () => {
                   <div className="text-zinc-400 text-sm">
                     {testimonials[activeIndex].role}
                   </div>
+                  {testimonials[activeIndex].company && (
+                    <div className="text-zinc-500 text-xs">
+                      {testimonials[activeIndex].company}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

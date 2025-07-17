@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.CLAUDE_API_KEY!,
+        'x-api-key': process.env['CLAUDE_API_KEY']!,
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
@@ -118,8 +118,8 @@ Transform the user's prompt into a high-performance Claude prompt.`
   } catch (error) {
     console.error('Rewrite API error:', error);
     return res.status(500).json({ 
-      error: 'Failed to optimize prompt',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: 'Failed to process rewrite request',
+      details: process.env.NODE_ENV === 'development' && typeof error === 'object' && error && 'message' in error ? (error as any).message : undefined
     });
   }
 }

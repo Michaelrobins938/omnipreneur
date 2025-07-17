@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  role      UserRole @default(MEMBER)
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdTasks    Task[]     @relation("TaskCreator")
+  assignedTasks   Task[]     @relation("TaskAssignee")
+  comments        Comment[]
+  timeLogs        TimeLog[]
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  plan      PlanType @default(FREE)
+  settings  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users     User[]
+  tasks     Task[]
+  projects  Project[]
+
+  @@map("teams")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#3B82F6")
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  tasks Task[]
+
+  @@map("projects")
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  priority    Priority   @default(MEDIUM)
+  status      TaskStatus @default(TODO)
+  dueDate     DateTime?
+  teamId      String
+  team        Team       @relation(fields: [teamId], references: [id])
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id])
+  createdById String
+  createdBy   User       @relation("TaskCreator", fields: [createdById], references: [id])
+  assignedToId String?
+  assignedTo  User?      @relation("TaskAssignee", fields: [assignedToId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  comments Comment[]
+  timeLogs TimeLog[]
+
+  @@map("tasks")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("comments")
+}
+
+model TimeLog {
+  id        String   @id @default(cuid())
+  duration  Int      // Duration in minutes
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  loggedAt  DateTime @default(now())
+
+  @@map("time_logs")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  createdAt DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum PlanType {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  ARCHIVED
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_DUE
+  TASK_COMPLETED
+  TEAM_INVITE
+  SYSTEM
+} 

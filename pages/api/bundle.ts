@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Bundle API error:', error);
     return res.status(500).json({ 
       error: 'Failed to generate bundle',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' && typeof error === 'object' && error && 'message' in error ? (error as any).message : undefined
     });
   }
 }
@@ -115,7 +115,7 @@ async function generateBundle(params: BundleGenerationParams) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.CLAUDE_API_KEY!,
+      'x-api-key': process.env['CLAUDE_API_KEY']!,
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
@@ -191,7 +191,7 @@ Use ${pricingStrategy} pricing strategy to maximize conversions and perceived va
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      'Authorization': `Bearer ${process.env['OPENAI_API_KEY']}`
     },
     body: JSON.stringify({
       model: 'gpt-4',
