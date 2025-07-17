@@ -1,4 +1,4 @@
-export function Button({ onClick, children }) {
+export function Button({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}

@@ -1,4 +1,4 @@
-export function Input({ value, onChange, placeholder }) {
+export function Input({ value, onChange, placeholder }: { value?: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string }) {
   return (
     <input
       type="text"
