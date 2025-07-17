@@ -62,6 +62,7 @@
     "NOVUS_Launch_Bundle/**/*",
     "NOVUS_Customer_Package/**/*",
     "system-files/**/*",
-    "taskflow-ai/**/*"
+    "taskflow-ai/**/*",
+    "organized/**/*"
   ]
 }
