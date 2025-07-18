@@ -31,8 +31,8 @@ dist/
 Thumbs.db
 
 # Logs
-logs
 *.log
+logs/
 
 # Runtime data
 pids
@@ -102,24 +102,18 @@ jspm_packages/
 tmp/
 temp/
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# Prisma
-prisma/migrations/
-
-# Stripe
-.stripe/
-
-# Build artifacts
-*.zip
-*.tar.gz
-
-# Showcase images (optional - uncomment if you want to exclude them)
-# showcase images/
-
-# Customer packages (optional - uncomment if you want to exclude them)
-# *_complete/
-# *_project/
+# Backup files
+*.backup
+*.bak

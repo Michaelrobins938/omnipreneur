@@ -1,0 +1,317 @@
+{
+  "pageTitle": "Luna - AI-Powered Business Platform",
+  "url": "https://luna-web-psi.vercel.app/",
+  "layout": {
+    "header": {
+      "type": "fixed",
+      "logo": {
+        "text": "Luna",
+        "alt": "Luna Logo"
+      },
+      "navigation": {
+        "links": [
+          "Home",
+          "About",
+          "Onboarding",
+          "Chat",
+          "Resources",
+          "Community",
+          "Meditation",
+          "Goals",
+          "Support Us",
+          "Contact"
+        ],
+        "cta": {
+          "login": "Login",
+          "getStarted": "Get Started"
+        }
+      }
+    },
+    "hero": {
+      "title": "The Future of AI-Powered Business",
+      "subtitle": "Transform your business with cutting-edge AI tools. Generate viral content, optimize performance, and scale your operations with unprecedented efficiency.",
+      "cta": {
+        "primary": "Get Started Free",
+        "secondary": "Watch Demo"
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "items": [
+        {
+          "title": "Enterprise Security",
+          "description": "Bank-grade security for your data"
+        },
+        {
+          "title": "Real-time Analytics",
+          "description": "Live dashboard with performance insights"
+        },
+        {
+          "title": "Lightning Fast",
+          "description": "Optimized for speed and performance"
+        }
+      ]
+    },
+    "products": {
+      "title": "Complete AI Suite for Modern Business",
+      "subtitle": "Transform your business with our comprehensive suite of AI-powered tools. From content creation to analytics, we've got everything you need to scale.",
+      "items": [
+        {
+          "name": "NOVUS Protocol",
+          "subtitle": "AI Prompt Optimizer",
+          "description": "Revolutionary AI prompt engineering that transforms your ideas into optimized, high-converting content with unprecedented accuracy.",
+          "features": [
+            "Advanced prompt engineering",
+            "Real-time optimization",
+            "Multi-language support",
+            "Performance analytics",
+            "Custom templates",
+            "API integration"
+          ],
+          "stats": {
+            "accuracy": "99.2%",
+            "speed": "10x faster",
+            "users": "50K+"
+          },
+          "pricing": "From $29/month"
+        },
+        {
+          "name": "AutoRewrite Engine",
+          "subtitle": "Content Refinement",
+          "description": "Intelligent content rewriting that maintains your voice while optimizing for engagement, SEO, and conversion rates.",
+          "features": [
+            "Smart content rewriting",
+            "SEO optimization",
+            "Tone preservation",
+            "Plagiarism detection",
+            "Bulk processing",
+            "Version control"
+          ],
+          "stats": {
+            "accuracy": "98.7%",
+            "speed": "5x faster",
+            "users": "75K+"
+          },
+          "pricing": "From $49/month"
+        },
+        {
+          "name": "Bundle Builder",
+          "subtitle": "Product Packaging",
+          "description": "Create premium digital products and courses with AI-powered packaging, pricing optimization, and marketing automation.",
+          "features": [
+            "AI-powered packaging",
+            "Pricing optimization",
+            "Marketing automation",
+            "Sales funnel builder",
+            "Analytics dashboard",
+            "Customer segmentation"
+          ],
+          "stats": {
+            "accuracy": "97.5%",
+            "speed": "8x faster",
+            "users": "25K+"
+          },
+          "pricing": "From $79/month"
+        },
+        {
+          "name": "Content Spawner",
+          "subtitle": "Viral Content Generator",
+          "description": "Generate 100+ viral pieces with AI that understands trending topics, audience psychology, and viral mechanics.",
+          "features": [
+            "Viral content generation",
+            "Trend analysis",
+            "Audience targeting",
+            "Multi-platform optimization",
+            "Performance tracking",
+            "A/B testing"
+          ],
+          "stats": {
+            "accuracy": "96.8%",
+            "speed": "15x faster",
+            "users": "100K+"
+          },
+          "pricing": "From $99/month"
+        },
+        {
+          "name": "Live Dashboard",
+          "subtitle": "Analytics & Tracking",
+          "description": "Real-time analytics and insights with predictive modeling, automated reporting, and actionable recommendations.",
+          "features": [
+            "Real-time analytics",
+            "Predictive modeling",
+            "Automated reporting",
+            "Custom dashboards",
+            "Data visualization",
+            "Alert system"
+          ],
+          "stats": {
+            "accuracy": "99.5%",
+            "speed": "Real-time",
+            "users": "200K+"
+          },
+          "pricing": "From $149/month"
+        },
+        {
+          "name": "Affiliate Portal",
+          "subtitle": "Referral System",
+          "description": "Complete affiliate management system with automated tracking, commission optimization, and performance analytics.",
+          "features": [
+            "Automated tracking",
+            "Commission optimization",
+            "Performance analytics",
+            "Multi-tier system",
+            "Payment automation",
+            "Fraud detection"
+          ],
+          "stats": {
+            "accuracy": "99.1%",
+            "speed": "Instant",
+            "users": "30K+"
+          },
+          "pricing": "From $199/month"
+        }
+      ],
+      "cta": "Explore All Products"
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "subtitle": "Let's Build Together",
+      "description": "Ready to transform your business with AI? Our team of experts is here to help you get started and answer any questions you might have.",
+      "form": {
+        "title": "Send us a Message",
+        "fields": [
+          {
+            "name": "fullName",
+            "label": "Full Name *",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "email",
+            "label": "Email Address *",
+            "type": "email",
+            "required": true
+          },
+          {
+            "name": "company",
+            "label": "Company",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "message",
+            "label": "Message *",
+            "type": "textarea",
+            "required": true
+          }
+        ],
+        "submitButton": "Send Message"
+      },
+      "contactInfo": {
+        "email": {
+          "title": "Email Us",
+          "subtitle": "Get in touch with our team",
+          "value": "hello@omnipreneur.ai"
+        },
+        "phone": {
+          "title": "Call Us",
+          "subtitle": "Speak with our experts",
+          "value": "+1 (555) 123-4567"
+        },
+        "address": {
+          "title": "Visit Us",
+          "subtitle": "Our headquarters",
+          "value": "San Francisco, CA"
+        },
+        "hours": {
+          "title": "Business Hours",
+          "subtitle": "When we're available",
+          "value": "Mon-Fri 9AM-6PM PST"
+        }
+      },
+      "whyChooseUs": {
+        "title": "Why Choose Us?",
+        "items": [
+          "24/7 Expert Support",
+          "Custom AI Solutions",
+          "Enterprise Security",
+          "Scalable Infrastructure"
+        ]
+      }
+    },
+    "footer": {
+      "company": {
+        "name": "Omnipreneur",
+        "description": "Transform your business with cutting-edge AI tools. Generate viral content, optimize performance, and scale your operations with unprecedented efficiency.",
+        "contact": {
+          "email": "hello@omnipreneur.ai",
+          "phone": "+1 (555) 123-4567",
+          "address": "San Francisco, CA",
+          "website": "www.omnipreneur.ai"
+        }
+      },
+      "sections": [
+        {
+          "title": "Products",
+          "links": [
+            "NOVUS Protocol",
+            "AutoRewrite Engine",
+            "Bundle Builder",
+            "Content Spawner",
+            "Live Dashboard",
+            "Affiliate Portal"
+          ]
+        },
+        {
+          "title": "Solutions",
+          "links": [
+            "For Creators",
+            "For Businesses",
+            "For Agencies",
+            "Enterprise",
+            "Startups",
+            "Freelancers"
+          ]
+        },
+        {
+          "title": "Resources",
+          "links": [
+            "Documentation",
+            "API Reference",
+            "Tutorials",
+            "Blog",
+            "Case Studies",
+            "Help Center"
+          ]
+        },
+        {
+          "title": "Company",
+          "links": [
+            "About Us",
+            "Careers",
+            "Press",
+            "Partners",
+            "Contact",
+            "Support"
+          ]
+        }
+      ],
+      "legal": {
+        "copyright": "© 2024 Omnipreneur. All rights reserved. Made within San Francisco",
+        "links": [
+          "Privacy Policy",
+          "Terms of Service",
+          "Cookie Policy",
+          "GDPR Compliance",
+          "Security",
+          "Accessibility"
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "scrapedAt": "2025-07-18T02:45:00Z",
+    "source": "https://luna-web-psi.vercel.app/",
+    "description": "Complete layout structure of the Luna homepage including all sections, content, and navigation"
+  }
+} 

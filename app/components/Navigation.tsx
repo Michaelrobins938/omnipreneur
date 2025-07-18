@@ -43,85 +43,102 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-zinc-950/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? 'bg-zinc-950/90 backdrop-blur-xl shadow-2xl border-b border-zinc-800/50' : 'bg-zinc-950/20 backdrop-blur-sm'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="inline-block w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-white text-xl">
-                🧠
-              </span>
-              <span className="font-orbitron text-xl text-white font-bold tracking-wide">
-                Omnipreneur
-                <span className="block font-normal text-xs text-zinc-400">AI Suite</span>
-              </span>
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">O</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-orbitron text-2xl text-white font-bold tracking-wide group-hover:text-cyan-400 transition-colors duration-300">
+                  Omnipreneur
+                </span>
+                <span className="text-xs text-zinc-400 font-medium">AI Suite</span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
               <div className="relative group">
-                <button className="text-zinc-400 hover:text-white transition-colors">Products</button>
-                <div className="absolute top-full left-0 w-80 pt-4 hidden group-hover:block">
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-xl">
-                    {products.map((product) => (
-                      <Link
-                        key={product.name}
-                        href={product.href}
-                        className={`block p-3 rounded-lg hover:bg-zinc-800 transition-colors ${
-                          pathname === product.href ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-                        }`}
-                      >
-                        <div className="font-medium">{product.name}</div>
-                        <div className="text-sm text-zinc-500">{product.description}</div>
-                      </Link>
-                    ))}
+                <button className="text-zinc-300 hover:text-white transition-all duration-300 font-medium text-sm tracking-wide">
+                  Products
+                </button>
+                <div className="absolute top-full left-0 w-80 pt-6 hidden group-hover:block">
+                  <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 shadow-2xl">
+                    <div className="grid grid-cols-1 gap-2">
+                      {products.map((product) => (
+                        <Link
+                          key={product.name}
+                          href={product.href}
+                          className={`block p-4 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 group/item ${
+                            pathname === product.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                          }`}
+                        >
+                          <div className="font-semibold text-white group-hover/item:text-cyan-400 transition-colors duration-300">{product.name}</div>
+                          <div className="text-sm text-zinc-400 mt-1">{product.description}</div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="relative group">
-                <button className="text-zinc-400 hover:text-white transition-colors">Resources</button>
-                <div className="absolute top-full left-0 w-48 pt-4 hidden group-hover:block">
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-xl">
-                    {resources.map((resource) => (
-                      <Link
-                        key={resource.name}
-                        href={resource.href}
-                        className={`block px-4 py-2 rounded-lg hover:bg-zinc-800 transition-colors ${
-                          pathname === resource.href ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-                        }`}
-                      >
-                        {resource.name}
-                      </Link>
-                    ))}
+                <button className="text-zinc-300 hover:text-white transition-all duration-300 font-medium text-sm tracking-wide">
+                  Resources
+                </button>
+                <div className="absolute top-full left-0 w-48 pt-6 hidden group-hover:block">
+                  <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-4 shadow-2xl">
+                    <div className="space-y-2">
+                      {resources.map((resource) => (
+                        <Link
+                          key={resource.name}
+                          href={resource.href}
+                          className={`block px-4 py-3 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                            pathname === resource.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                          }`}
+                        >
+                          {resource.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="relative group">
-                <button className="text-zinc-400 hover:text-white transition-colors">Company</button>
-                <div className="absolute top-full left-0 w-48 pt-4 hidden group-hover:block">
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-xl">
-                    {company.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`block px-4 py-2 rounded-lg hover:bg-zinc-800 transition-colors ${
-                          pathname === item.href ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-                        }`}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                <button className="text-zinc-300 hover:text-white transition-all duration-300 font-medium text-sm tracking-wide">
+                  Company
+                </button>
+                <div className="absolute top-full left-0 w-48 pt-6 hidden group-hover:block">
+                  <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-4 shadow-2xl">
+                    <div className="space-y-2">
+                      {company.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={`block px-4 py-3 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                            pathname === item.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                          }`}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <Link 
                 href="/contact" 
-                className={`text-zinc-400 hover:text-white transition-colors ${
+                className={`text-zinc-300 hover:text-white transition-all duration-300 font-medium text-sm tracking-wide ${
                   pathname === '/contact' ? 'text-white' : ''
                 }`}
               >
@@ -131,10 +148,10 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+              className="lg:hidden p-3 rounded-xl bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 hover:text-white transition-all duration-300"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -147,64 +164,70 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden fixed inset-0 top-16 bg-zinc-950 z-40 overflow-y-auto"
+            className="lg:hidden fixed inset-0 top-20 bg-zinc-950/95 backdrop-blur-xl z-40 overflow-y-auto"
           >
-            <div className="p-4">
-              <div className="space-y-1">
+            <div className="p-6">
+              <div className="space-y-6">
                 <div className="py-4">
-                  <div className="text-sm font-medium text-zinc-500 mb-2">Products</div>
-                  {products.map((product) => (
-                    <Link
-                      key={product.name}
-                      href={product.href}
-                      className={`block p-3 rounded-lg ${
-                        pathname === product.href ? 'bg-zinc-900 text-white' : 'text-zinc-400'
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-zinc-500">{product.description}</div>
-                    </Link>
-                  ))}
+                  <div className="text-sm font-semibold text-zinc-400 mb-4 uppercase tracking-wide">Products</div>
+                  <div className="space-y-2">
+                    {products.map((product) => (
+                      <Link
+                        key={product.name}
+                        href={product.href}
+                        className={`block p-4 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                          pathname === product.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <div className="font-semibold text-white">{product.name}</div>
+                        <div className="text-sm text-zinc-400 mt-1">{product.description}</div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="py-4">
-                  <div className="text-sm font-medium text-zinc-500 mb-2">Resources</div>
-                  {resources.map((resource) => (
-                    <Link
-                      key={resource.name}
-                      href={resource.href}
-                      className={`block px-4 py-2 rounded-lg ${
-                        pathname === resource.href ? 'bg-zinc-900 text-white' : 'text-zinc-400'
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {resource.name}
-                    </Link>
-                  ))}
+                  <div className="text-sm font-semibold text-zinc-400 mb-4 uppercase tracking-wide">Resources</div>
+                  <div className="space-y-2">
+                    {resources.map((resource) => (
+                      <Link
+                        key={resource.name}
+                        href={resource.href}
+                        className={`block px-4 py-3 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                          pathname === resource.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {resource.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="py-4">
-                  <div className="text-sm font-medium text-zinc-500 mb-2">Company</div>
-                  {company.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`block px-4 py-2 rounded-lg ${
-                        pathname === item.href ? 'bg-zinc-900 text-white' : 'text-zinc-400'
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="text-sm font-semibold text-zinc-400 mb-4 uppercase tracking-wide">Company</div>
+                  <div className="space-y-2">
+                    {company.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`block px-4 py-3 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                          pathname === item.href ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="py-4">
                   <Link
                     href="/contact"
-                    className={`block px-4 py-2 rounded-lg ${
-                      pathname === '/contact' ? 'bg-zinc-900 text-white' : 'text-zinc-400'
+                    className={`block px-4 py-3 rounded-xl hover:bg-zinc-800/50 transition-all duration-300 ${
+                      pathname === '/contact' ? 'bg-zinc-800/50 text-white' : 'text-zinc-300'
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

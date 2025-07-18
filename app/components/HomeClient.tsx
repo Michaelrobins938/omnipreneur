@@ -1,7 +1,7 @@
 "use client";
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import NavBar from './NavBar';
+
 import TechnologyCards from './TechnologyCards';
 import FeaturesSection from './FeaturesSection';
 import CALShowcase from './CALShowcase';
@@ -46,7 +46,6 @@ export default function HomeClient() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),transparent_80%)]" />
       {/* Main Content Sections */}
       <div className="relative z-10">
-        <NavBar />
         <Suspense fallback={<div className="flex justify-center items-center h-32"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div></div>}>
           <HeroSection />
           <TechnologyCards />
