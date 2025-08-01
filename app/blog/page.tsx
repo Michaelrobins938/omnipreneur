@@ -194,9 +194,9 @@ export default function Blog() {
                 className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-8 hover:border-cyan-500/30 transition-all duration-300"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-video bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                  <div className="aspect-video bg-zinc-800/60 rounded-xl flex items-center justify-center">
                     <div className="text-center">
-                                              <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <FaEye className="w-8 h-8 text-white" />
                       </div>
                       <p className="text-zinc-400">Featured Image</p>
@@ -205,7 +205,7 @@ export default function Blog() {
                   
                   <div className="flex flex-col justify-center">
                     <div className="flex items-center space-x-4 mb-4">
-                      <span className="px-3 py-1 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full text-sm font-semibold">
+                      <span className="px-3 py-1 bg-cyan-500 text-white rounded-full text-sm font-semibold">
                         Featured
                       </span>
                       <span className="text-zinc-400 text-sm">{post.category}</span>
@@ -234,7 +234,7 @@ export default function Blog() {
                     
                     <Link
                       href={`/blog/${post.id}`}
-                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300"
+                      className="inline-flex items-center px-6 py-3 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-600 transition-all duration-300"
                     >
                       Read More <FaArrowRight className="w-4 h-4 ml-2" />
                     </Link>
@@ -247,7 +247,7 @@ export default function Blog() {
       </section>
 
       {/* Blog Posts Grid */}
-      <section className="py-20 bg-gradient-to-br from-zinc-900/80 to-black/80">
+      <section className="py-20 bg-zinc-900/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -272,9 +272,9 @@ export default function Blog() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-300"
               >
-                <div className="aspect-video bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-xl mb-6 flex items-center justify-center">
+                <div className="aspect-video bg-zinc-800/60 rounded-xl mb-6 flex items-center justify-center">
                   <div className="text-center">
-                                          <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                       <FaEye className="w-6 h-6 text-white" />
                     </div>
                     <p className="text-zinc-400 text-sm">Post Image</p>
@@ -348,7 +348,7 @@ export default function Blog() {
                 placeholder="Enter your email"
                 className="flex-1 bg-zinc-800/60 border border-zinc-600/50 rounded-xl px-4 py-3 text-white placeholder-zinc-400 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300"
               />
-              <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300">
+              <button className="px-6 py-3 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-600 transition-all duration-300">
                 Subscribe
               </button>
             </div>
