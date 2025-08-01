@@ -94,7 +94,7 @@ export default function About() {
               <span className="block bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
                 Omnipreneur
               </span>
-            </motion.div>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               We're on a mission to democratize AI-powered content creation and empower creators, 

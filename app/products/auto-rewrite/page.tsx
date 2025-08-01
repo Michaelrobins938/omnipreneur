@@ -179,7 +179,7 @@ export default function AutoRewriteEngine() {
               <span className="block bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Engine™
               </span>
-            </motion.h1>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               Revolutionary AI-powered content rewriting that maintains your voice while optimizing for engagement, SEO, and conversion rates. Powered by CAL™ technology.

@@ -123,7 +123,7 @@ export default function Blog() {
               <span className="block bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
                 Insights
               </span>
-            </motion.div>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               Expert insights, tutorials, and strategies to help you succeed with AI-powered content creation and digital marketing.

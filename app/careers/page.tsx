@@ -246,7 +246,7 @@ export default function Careers() {
               <span className="block bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
                 Team
               </span>
-            </motion.div>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               Help us build the future of AI-powered content creation. Join a team of passionate innovators 

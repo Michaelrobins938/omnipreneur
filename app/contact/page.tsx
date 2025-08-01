@@ -151,7 +151,7 @@ export default function Contact() {
               <span className="block bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
                 Touch
               </span>
-            </motion.h1>
+            </h1>
             <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
               Ready to transform your business with AI? Our team of experts is here to help you implement the perfect solution.
             </p>
