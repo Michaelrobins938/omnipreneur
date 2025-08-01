@@ -48,7 +48,7 @@ export default function ContentSpawner() {
       gradient: 'from-blue-500 to-cyan-500'
     },
     {
-      icon: HiOutlineTrendingUp,
+      icon: HiOutlineChartBar,
       title: 'Trend Analysis',
       description: 'Real-time trend detection and content adaptation for maximum virality',
       gradient: 'from-green-500 to-emerald-500'
