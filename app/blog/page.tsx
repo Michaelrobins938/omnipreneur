@@ -339,7 +339,7 @@ export default function Blog() {
               Stay Updated
             </h2>
             <p className="text-xl text-zinc-400 mb-8">
-              Get the latest insights, tutorials, and strategies delivered to your inbox.
+              Get the latest insights and strategies delivered to your inbox.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
