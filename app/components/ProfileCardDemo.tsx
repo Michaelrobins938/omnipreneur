@@ -1,57 +1,84 @@
-"use client"
+"use client";
+
 import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  FaRocket, 
+  FaUsers, 
+  FaLightbulb, 
+  FaChartLine, 
+  FaShieldAlt, 
+  FaGlobe 
+} from 'react-icons/fa';
 import ProfileCard from './ProfileCard';
 
 const ProfileCardDemo = () => {
   const sampleProfiles = [
     {
-      name: 'R. Stephen',
-      role: 'Mechanical Engineer',
-      company: 'TechCorp Industries',
-      image: '/images/testimonial-1.jpg',
-      quote: 'The integration of AI with our robotics systems has revolutionized our manufacturing process.',
-      socialLinks: {
-        linkedin: '#',
-        twitter: '#',
-        github: '#'
-      },
+      icon: FaRocket,
+      title: 'AI Innovation',
+      description: 'Cutting-edge artificial intelligence solutions',
+      gradient: 'from-blue-500 to-cyan-500',
       stats: {
-        projects: 47,
-        experience: '8+ years',
-        location: 'San Francisco'
-      }
+        value: '99%',
+        label: 'Accuracy Rate'
+      },
+      features: ['Machine Learning', 'Neural Networks', 'Deep Learning']
     },
     {
-      name: 'S. George',
-      role: 'IT Professional',
-      company: 'Digital Solutions Inc.',
-      image: '/images/testimonial-2.jpg',
-      quote: 'Implementation was seamless, and the results exceeded our expectations.',
-      socialLinks: {
-        linkedin: '#',
-        website: '#'
-      },
+      icon: FaUsers,
+      title: 'Team Collaboration',
+      description: 'Seamless team coordination and communication',
+      gradient: 'from-green-500 to-emerald-500',
       stats: {
-        projects: 23,
-        experience: '5+ years',
-        location: 'New York'
-      }
+        value: '50+',
+        label: 'Team Members'
+      },
+      features: ['Real-time Chat', 'File Sharing', 'Project Management']
     },
     {
-      name: 'A. Martinez',
-      role: 'Operations Director',
-      company: 'Global Manufacturing',
-      image: '/images/testimonial-3.jpg',
-      quote: 'The future of industrial automation is here. This technology has given us a competitive edge.',
-      socialLinks: {
-        linkedin: '#',
-        twitter: '#'
-      },
+      icon: FaLightbulb,
+      title: 'Creative Solutions',
+      description: 'Innovative problem-solving approaches',
+      gradient: 'from-purple-500 to-pink-500',
       stats: {
-        projects: 34,
-        experience: '12+ years',
-        location: 'Chicago'
-      }
+        value: '200+',
+        label: 'Projects Completed'
+      },
+      features: ['Design Thinking', 'User Research', 'Prototyping']
+    },
+    {
+      icon: FaChartLine,
+      title: 'Data Analytics',
+      description: 'Advanced data analysis and insights',
+      gradient: 'from-orange-500 to-red-500',
+      stats: {
+        value: '1M+',
+        label: 'Data Points'
+      },
+      features: ['Predictive Analytics', 'Visualization', 'Reporting']
+    },
+    {
+      icon: FaShieldAlt,
+      title: 'Security First',
+      description: 'Enterprise-grade security and compliance',
+      gradient: 'from-indigo-500 to-purple-500',
+      stats: {
+        value: '100%',
+        label: 'Uptime'
+      },
+      features: ['Encryption', 'Backup', 'Monitoring']
+    },
+    {
+      icon: FaGlobe,
+      title: 'Global Reach',
+      description: 'Worldwide deployment and support',
+      gradient: 'from-teal-500 to-cyan-500',
+      stats: {
+        value: '25+',
+        label: 'Countries'
+      },
+      features: ['Multi-language', 'Localization', '24/7 Support']
     }
   ];
 
@@ -63,55 +90,22 @@ const ProfileCardDemo = () => {
       {/* Section Title */}
       <div className="text-center mb-16 relative z-10">
         <h2 className="text-4xl md:text-5xl font-orbitron font-bold gradient-text mb-6">
-          TEAM PROFILES
+          FEATURE CARDS
         </h2>
         <p className="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto">
-          Meet our expert team of AI professionals and industry leaders.
+          Explore our comprehensive suite of AI-powered features and capabilities.
         </p>
       </div>
       
       {/* Profile Cards Grid */}
       <div className="w-full max-w-7xl mx-auto relative z-10">
-        {/* Default Cards */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-white mb-8 text-center">Default Profile Cards</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sampleProfiles.map((profile, index) => (
-              <ProfileCard
-                key={index}
-                {...profile}
-                variant="default"
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Detailed Cards */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-white mb-8 text-center">Detailed Profile Cards</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {sampleProfiles.slice(0, 2).map((profile, index) => (
-              <ProfileCard
-                key={`detailed-${index}`}
-                {...profile}
-                variant="detailed"
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Minimal Cards */}
-        <div>
-          <h3 className="text-2xl font-bold text-white mb-8 text-center">Minimal Profile Cards</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {sampleProfiles.map((profile, index) => (
-              <ProfileCard
-                key={`minimal-${index}`}
-                {...profile}
-                variant="minimal"
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sampleProfiles.map((profile, index) => (
+            <ProfileCard
+              key={index}
+              {...profile}
+            />
+          ))}
         </div>
       </div>
     </section>
