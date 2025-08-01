@@ -2,11 +2,9 @@ import { create } from 'zustand'
 
 export interface User {
   id: string
+  name: string
   email: string
-  name?: string
   image?: string
-  role: 'ADMIN' | 'MANAGER' | 'MEMBER'
-  teamId?: string
 }
 
 interface AuthStore {
@@ -16,6 +14,7 @@ interface AuthStore {
   setUser: (user: User | null) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
+  logout: () => void
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -26,4 +25,5 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setUser: (user) => set({ user }),
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
+  logout: () => set({ user: null, error: null })
 })) 

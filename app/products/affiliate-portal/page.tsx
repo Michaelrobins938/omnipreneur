@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  FaBrain, 
+  FaUsers, 
   FaRocket, 
   FaChartLine, 
   FaShieldAlt, 
@@ -11,147 +11,138 @@ import {
   FaArrowRight,
   FaPlay,
   FaDownload,
-  FaCode,
   FaCog,
   FaLightbulb,
-  FaUsers,
   FaGlobe,
   FaClock,
-  FaStar
+  FaStar,
+  FaHandshake,
+  FaPercent,
+  FaDollarSign
 } from 'react-icons/fa';
-import { 
-  HiOutlineSparkles,
-  HiOutlineLightningBolt,
-  HiOutlineChartBar,
-  HiOutlineGlobe,
-  HiOutlineShieldCheck,
-  HiOutlineCog,
-  HiOutlineUserGroup,
-  HiOutlineClock
-} from 'react-icons/hi';
 
-export default function AutoRewriteEngine() {
+export default function AffiliatePortal() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
   const features = [
     {
-      icon: FaBrain,
-      title: 'CAL™-Powered AI',
-      description: 'Advanced Cognitive Architecture Layering for superior content understanding and rewriting',
-      gradient: 'from-purple-500 to-pink-500'
-    },
-    {
-      icon: HiOutlineLightningBolt,
-      title: 'Real-time Processing',
-      description: 'Instant content rewriting with sub-second response times',
-      gradient: 'from-yellow-500 to-orange-500'
-    },
-    {
-      icon: HiOutlineShieldCheck,
-      title: 'Tone Preservation',
-      description: 'Maintains your unique voice while optimizing for engagement',
+      icon: FaUsers,
+      title: 'Affiliate Management',
+      description: 'Comprehensive tools to manage your affiliate network and partnerships',
       gradient: 'from-green-500 to-emerald-500'
     },
     {
-      icon: HiOutlineChartBar,
-      title: 'SEO Optimization',
-      description: 'Automatic keyword integration and search engine optimization',
+      icon: FaRocket,
+      title: 'Commission Tracking',
+      description: 'Real-time tracking of commissions, conversions, and payouts',
       gradient: 'from-blue-500 to-cyan-500'
     },
     {
-      icon: HiOutlineCog,
-      title: 'Bulk Processing',
-      description: 'Process thousands of pieces simultaneously with batch operations',
+      icon: FaChartLine,
+      title: 'Performance Analytics',
+      description: 'Detailed insights into affiliate performance and ROI',
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    {
+      icon: FaShieldAlt,
+      title: 'Fraud Protection',
+      description: 'Advanced fraud detection and prevention systems',
+      gradient: 'from-orange-500 to-red-500'
+    },
+    {
+      icon: FaCog,
+      title: 'Automated Payouts',
+      description: 'Automated commission payments and financial management',
       gradient: 'from-indigo-500 to-purple-500'
     },
     {
-      icon: HiOutlineGlobe,
-      title: 'Multi-language Support',
-      description: 'Support for 50+ languages with cultural context awareness',
-      gradient: 'from-red-500 to-pink-500'
+      icon: FaGlobe,
+      title: 'Multi-Platform',
+      description: 'Support for multiple affiliate networks and platforms',
+      gradient: 'from-yellow-500 to-orange-500'
     }
   ];
 
   const useCases = [
     {
-      title: 'Content Marketing',
-      description: 'Transform blog posts, social media content, and email campaigns',
-      icon: FaUsers,
-      examples: ['Blog post optimization', 'Social media content', 'Email campaigns']
+      title: 'Digital Products',
+      description: 'Manage affiliate programs for ebooks, courses, and software',
+      icon: FaHandshake,
+      examples: ['Course affiliates', 'Software partners', 'Digital downloads']
     },
     {
       title: 'E-commerce',
-      description: 'Optimize product descriptions and marketing copy',
-      icon: FaGlobe,
-      examples: ['Product descriptions', 'Category pages', 'Marketing copy']
+      description: 'Scale your e-commerce business through affiliate marketing',
+      icon: FaDollarSign,
+      examples: ['Product affiliates', 'Store partners', 'Commission tracking']
     },
     {
-      title: 'Technical Writing',
-      description: 'Improve documentation and technical content clarity',
-      icon: FaCode,
-      examples: ['API documentation', 'User guides', 'Technical blogs']
+      title: 'SaaS Companies',
+      description: 'Build partner networks for SaaS and subscription products',
+      icon: FaUsers,
+      examples: ['SaaS partners', 'Subscription tracking', 'Recurring commissions']
     },
     {
-      title: 'Academic Writing',
-      description: 'Enhance research papers and academic content',
-      icon: FaLightbulb,
-      examples: ['Research papers', 'Theses', 'Academic articles']
+      title: 'Content Creators',
+      description: 'Monetize your audience through strategic partnerships',
+      icon: FaPercent,
+      examples: ['Creator partnerships', 'Audience monetization', 'Brand collaborations']
     }
   ];
 
   const pricingTiers = [
     {
       name: 'Starter',
-      price: '$29',
+      price: '$79',
       period: '/month',
-      description: 'Perfect for individuals and small teams',
+      description: 'Perfect for small affiliate programs',
       features: [
-        '1,000 rewrites per month',
-        'Basic tone preservation',
-        '5 language support',
+        'Up to 100 affiliates',
+        'Basic tracking',
         'Email support',
-        'API access'
+        'Standard reports',
+        'Manual payouts'
       ],
       popular: false
     },
     {
       name: 'Professional',
-      price: '$99',
+      price: '$199',
       period: '/month',
-      description: 'Ideal for growing businesses',
+      description: 'Ideal for growing affiliate networks',
       features: [
-        '10,000 rewrites per month',
-        'Advanced tone preservation',
-        '25 language support',
+        'Up to 1,000 affiliates',
+        'Advanced analytics',
         'Priority support',
-        'Bulk processing',
-        'Custom templates'
+        'Automated payouts',
+        'Custom tracking',
+        'Fraud protection'
       ],
       popular: true
     },
     {
       name: 'Enterprise',
-      price: '$299',
+      price: '$499',
       period: '/month',
-      description: 'For large organizations',
+      description: 'For large affiliate programs',
       features: [
-        'Unlimited rewrites',
-        'Custom AI training',
-        '50+ language support',
+        'Unlimited affiliates',
+        'Custom integrations',
         'Dedicated support',
+        'Advanced automation',
         'White-label options',
-        'Custom integrations'
+        'API access'
       ],
       popular: false
     }
   ];
 
   const stats = [
-    { number: '98.7%', label: 'Accuracy Rate', icon: FaStar },
-    { number: '5x', label: 'Faster Processing', icon: FaRocket },
-    { number: '50+', label: 'Languages Supported', icon: FaGlobe },
-    { number: '24/7', label: 'Availability', icon: FaClock }
+    { number: '2.5x', label: 'Revenue Growth', icon: FaChartLine },
+    { number: '85%', label: 'Partner Retention', icon: FaUsers },
+    { number: '50+', label: 'Platforms Supported', icon: FaGlobe },
+    { number: '24/7', label: 'Support Available', icon: FaClock }
   ];
 
   return (
@@ -169,26 +160,27 @@ export default function AutoRewriteEngine() {
             className="text-center mb-16"
           >
             <div className="flex items-center justify-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <FaBrain className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <FaUsers className="w-8 h-8 text-white" />
               </div>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6">
-              AutoRewrite
-              <span className="block bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Engine™
+              Affiliate
+              <span className="block bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
+                Portal™
               </span>
-            </motion.h1>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
-              Revolutionary AI-powered content rewriting that maintains your voice while optimizing for engagement, SEO, and conversion rates. Powered by CAL™ technology.
+              Build and scale your affiliate program with powerful management tools, 
+              real-time tracking, and automated commission systems.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <motion.button
                 onClick={() => setIsDemoOpen(true)}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -197,12 +189,12 @@ export default function AutoRewriteEngine() {
               </motion.button>
 
               <motion.button
-                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-purple-500 hover:text-purple-400 transition-all duration-300 flex items-center justify-center space-x-2"
+                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-green-500 hover:text-green-400 transition-all duration-300 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <FaDownload className="w-5 h-5" />
-                <span>Download SDK</span>
+                <span>Start Free Trial</span>
               </motion.button>
             </div>
 
@@ -243,10 +235,10 @@ export default function AutoRewriteEngine() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Powered by CAL™ Technology
+              Complete Affiliate Management
             </h2>
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
-              Our Cognitive Architecture Layering technology ensures superior content understanding and rewriting capabilities.
+              Everything you need to build, manage, and scale your affiliate program.
             </p>
           </motion.div>
 
@@ -259,7 +251,7 @@ export default function AutoRewriteEngine() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-6 hover:border-purple-500/30 transition-all duration-300 group"
+                  className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-6 hover:border-green-500/30 transition-all duration-300 group"
                 >
                   <div className={`w-12 h-12 bg-gradient-to-br ${feature.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-6 h-6 text-white" />
@@ -286,7 +278,7 @@ export default function AutoRewriteEngine() {
               Use Cases
             </h2>
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
-              Transform your content across multiple industries and use cases.
+              Perfect for businesses looking to scale through affiliate marketing.
             </p>
           </motion.div>
 
@@ -299,10 +291,10 @@ export default function AutoRewriteEngine() {
                   initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-8 hover:border-purple-500/30 transition-all duration-300"
+                  className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-8 hover:border-green-500/30 transition-all duration-300"
                 >
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">{useCase.title}</h3>
@@ -336,7 +328,7 @@ export default function AutoRewriteEngine() {
               Pricing Plans
             </h2>
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
-              Choose the perfect plan for your content rewriting needs.
+              Choose the perfect plan for your affiliate program needs.
             </p>
           </motion.div>
 
@@ -349,13 +341,13 @@ export default function AutoRewriteEngine() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className={`relative bg-zinc-900/60 backdrop-blur-xl border rounded-2xl p-8 ${
                   tier.popular 
-                    ? 'border-purple-500/50 shadow-purple-500/25' 
+                    ? 'border-green-500/50 shadow-green-500/25' 
                     : 'border-zinc-700/50'
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
                       Most Popular
                     </span>
                   </div>
@@ -381,7 +373,7 @@ export default function AutoRewriteEngine() {
 
                 <button className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
                   tier.popular
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600'
                     : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 }`}>
                   Get Started
@@ -393,7 +385,7 @@ export default function AutoRewriteEngine() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+      <section className="py-20 bg-gradient-to-br from-green-500/10 to-emerald-500/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -401,14 +393,14 @@ export default function AutoRewriteEngine() {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Ready to Transform Your Content?
+              Ready to Scale Your Affiliate Program?
             </h2>
             <p className="text-xl text-zinc-400 mb-8">
-              Join thousands of businesses using AutoRewrite Engine™ to create engaging, optimized content.
+              Join thousands of businesses using Affiliate Portal™ to grow their revenue through partnerships.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -416,7 +408,7 @@ export default function AutoRewriteEngine() {
                 <FaArrowRight className="w-5 h-5" />
               </motion.button>
               <motion.button
-                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-purple-500 hover:text-purple-400 transition-all duration-300 flex items-center justify-center space-x-2"
+                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-green-500 hover:text-green-400 transition-all duration-300 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -445,7 +437,7 @@ export default function AutoRewriteEngine() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-white">AutoRewrite Engine™ Demo</h3>
+              <h3 className="text-2xl font-bold text-white">Affiliate Portal™ Demo</h3>
               <button
                 onClick={() => setIsDemoOpen(false)}
                 className="text-zinc-400 hover:text-white transition-colors"
@@ -456,26 +448,36 @@ export default function AutoRewriteEngine() {
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-3">Original Content</label>
-                <textarea
-                  className="w-full bg-zinc-800/60 border border-zinc-600/50 rounded-xl px-4 py-3 text-white placeholder-zinc-400 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 h-32 resize-none"
-                  placeholder="Enter your content to rewrite..."
+                <label className="block text-sm font-medium text-zinc-300 mb-3">Affiliate Name</label>
+                <input
+                  type="text"
+                  className="w-full bg-zinc-800/60 border border-zinc-600/50 rounded-xl px-4 py-3 text-white placeholder-zinc-400 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                  placeholder="Enter affiliate name..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-3">Commission Rate (%)</label>
+                <input
+                  type="number"
+                  className="w-full bg-zinc-800/60 border border-zinc-600/50 rounded-xl px-4 py-3 text-white placeholder-zinc-400 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                  placeholder="Enter commission rate..."
                 />
               </div>
               
               <div className="flex gap-4">
-                <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
-                  Rewrite Content
+                <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300">
+                  Add Affiliate
                 </button>
-                <button className="px-6 py-3 border border-zinc-600 text-zinc-300 rounded-xl font-semibold hover:border-purple-500 hover:text-purple-400 transition-all duration-300">
+                <button className="px-6 py-3 border border-zinc-600 text-zinc-300 rounded-xl font-semibold hover:border-green-500 hover:text-green-400 transition-all duration-300">
                   Clear
                 </button>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-3">Rewritten Content</label>
+                <label className="block text-sm font-medium text-zinc-300 mb-3">Affiliate Dashboard Preview</label>
                 <div className="w-full bg-zinc-800/60 border border-zinc-600/50 rounded-xl px-4 py-3 text-white h-32 overflow-y-auto">
-                  <p className="text-zinc-400">Your rewritten content will appear here...</p>
+                  <p className="text-zinc-400">Your affiliate dashboard preview will appear here...</p>
                 </div>
               </div>
             </div>
