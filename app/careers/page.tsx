@@ -22,7 +22,6 @@ import {
   HiOutlineAcademicCap,
   HiOutlineHeart,
   HiOutlineGlobe,
-  HiOutlineAcademicCap,
   HiOutlineBriefcase,
   HiOutlineClock,
   HiOutlineLocationMarker

@@ -15,7 +15,6 @@ import {
   FaClock,
   FaStar,
   FaLightbulb,
-  FaChartLine,
   FaBullseye,
   FaCog
 } from 'react-icons/fa';
@@ -28,8 +27,7 @@ import {
   HiOutlineCog,
   HiOutlineUserGroup,
   HiOutlineClock,
-  HiOutlineFire,
-  HiOutlineChartBar
+  HiOutlineFire
 } from 'react-icons/hi';
 
 export default function ContentSpawner() {
