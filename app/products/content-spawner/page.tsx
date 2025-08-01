@@ -15,7 +15,7 @@ import {
   FaClock,
   FaStar,
   FaLightbulb,
-  FaTrendingUp,
+  FaChartLine,
   FaBullseye,
   FaCog
 } from 'react-icons/fa';
@@ -29,7 +29,7 @@ import {
   HiOutlineUserGroup,
   HiOutlineClock,
   HiOutlineFire,
-  HiOutlineTarget
+  HiOutlineChartBar
 } from 'react-icons/hi';
 
 export default function ContentSpawner() {
@@ -44,7 +44,7 @@ export default function ContentSpawner() {
       gradient: 'from-orange-500 to-red-500'
     },
     {
-      icon: HiOutlineTarget,
+      icon: HiOutlineChartBar,
       title: 'Audience Targeting',
       description: 'Precise audience segmentation and content optimization for maximum engagement',
       gradient: 'from-blue-500 to-cyan-500'
@@ -97,7 +97,7 @@ export default function ContentSpawner() {
     {
       title: 'Email Campaigns',
       description: 'High-converting email sequences and campaigns',
-      icon: FaTrendingUp,
+      icon: FaChartLine,
       examples: ['Welcome sequences', 'Newsletter content', 'Promotional emails', 'Drip campaigns']
     }
   ];

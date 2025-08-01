@@ -19,7 +19,7 @@ import {
 } from 'react-icons/fa';
 import { 
   HiOutlineUsers,
-  HiOutlineRocket,
+  HiOutlineAcademicCap,
   HiOutlineHeart,
   HiOutlineGlobe,
   HiOutlineAcademicCap,
@@ -159,7 +159,7 @@ export default function Careers() {
 
   const companyValues = [
     {
-      icon: HiOutlineRocket,
+      icon: HiOutlineAcademicCap,
       title: 'Innovation First',
       description: 'We push the boundaries of what\'s possible with AI and technology.',
       color: 'from-blue-500 to-cyan-500'
