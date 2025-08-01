@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
+import { IconType } from 'react-icons';
 
 interface ProfileCardProps {
-  icon: LucideIcon;
+  icon: IconType;
   title: string;
   description: string;
   gradient: string;
