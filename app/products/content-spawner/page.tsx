@@ -181,7 +181,7 @@ export default function ContentSpawner() {
               <span className="block bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
                 Spawner™
               </span>
-            </motion.h1>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               Generate 100+ viral pieces with AI that understands trending topics, audience psychology, and viral mechanics. Create content that spreads like wildfire.

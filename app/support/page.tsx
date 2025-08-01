@@ -144,7 +144,7 @@ export default function Support() {
               <span className="block bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
                 Center
               </span>
-            </motion.div>
+            </h1>
             
             <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed mb-8">
               We're here to help you succeed. Get the support you need to make the most of our AI-powered tools.

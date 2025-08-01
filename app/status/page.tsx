@@ -172,7 +172,7 @@ export default function Status() {
               }`}>
                 Status
               </span>
-            </motion.div>
+            </h1>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <motion.div
