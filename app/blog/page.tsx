@@ -194,9 +194,9 @@ export default function Blog() {
                 className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-8 hover:border-cyan-500/30 transition-all duration-300"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-video bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                  <div className="aspect-video bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                              <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <FaEye className="w-8 h-8 text-white" />
                       </div>
                       <p className="text-zinc-400">Featured Image</p>
@@ -272,9 +272,9 @@ export default function Blog() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-300"
               >
-                <div className="aspect-video bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl mb-6 flex items-center justify-center">
+                <div className="aspect-video bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-xl mb-6 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                                          <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                       <FaEye className="w-6 h-6 text-white" />
                     </div>
                     <p className="text-zinc-400 text-sm">Post Image</p>
