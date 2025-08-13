@@ -11,7 +11,7 @@ export default function ProofBand() {
   const prefersReducedMotion = useReducedMotion();
 
   const handleMetricClick = (metric: string) => {
-    trackEvent('proof_metric_click', { metric, location: 'proof_band' });
+    trackEvent('proof_metric_click' as any, { metric, location: 'proof_band' });
     window.location.href = '/case-studies';
   };
 

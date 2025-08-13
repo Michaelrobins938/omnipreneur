@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await ContentLibraryService.trackInteraction(contentId, user.id, action);
+    await ContentLibraryService.trackInteraction(contentId, user.userId, action);
 
     return NextResponse.json({
       success: true,

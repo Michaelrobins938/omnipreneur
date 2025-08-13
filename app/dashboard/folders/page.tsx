@@ -19,8 +19,6 @@ import {
   Calendar,
   ChevronRight,
   ChevronDown,
-  DragIndicator,
-  Color,
   Check,
   X,
   Archive,

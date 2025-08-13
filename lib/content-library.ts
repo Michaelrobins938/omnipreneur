@@ -292,15 +292,31 @@ export class ContentLibraryService {
     updates: Partial<CreateContentLibraryItemData>
   ) {
     try {
+      // Filter out undefined values and only include allowed fields
+      const updateData: any = {
+        updatedAt: new Date()
+      };
+      
+      // Only include fields that are allowed to be updated
+      const allowedFields = [
+        'title', 'content', 'contentType', 'productSource', 'tags', 
+        'keywords', 'targetAudience', 'niche', 'originalPrompt', 
+        'contextData', 'folderId', 'qualityScore', 'userRating', 
+        'isFavorited', 'isArchived'
+      ];
+      
+      Object.keys(updates).forEach(key => {
+        if (allowedFields.includes(key) && (updates as any)[key] !== undefined) {
+          (updateData as any)[key] = (updates as any)[key];
+        }
+      });
+
       const contentItem = await prisma.contentLibraryItem.update({
         where: { 
           id: contentId,
           userId // Ensure user owns the content
         },
-        data: {
-          ...updates,
-          updatedAt: new Date()
-        }
+        data: updateData
       });
 
       // Track update

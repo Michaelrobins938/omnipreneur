@@ -57,19 +57,7 @@ const SettingsSchema = z.object({
   ])
 });
 
-/**
- * POST /api/users/settings
- * 
- * Save user settings for a specific section
- * Validates settings and stores them in the database
- * 
- * Body:
- * {
- *   section: 'notifications' | 'security' | 'privacy' | 'appearance',
- *   data: { ...settings }
- * }
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -96,35 +84,15 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
         throw new Error('Invalid settings section');
     }
 
-    // Get current user preferences or create new
-    let userPreferences = await prisma.userPreference.findFirst({
-      where: { userId: user.userId }
-    });
-
-    if (!userPreferences) {
-      userPreferences = await prisma.userPreference.create({
-        data: {
-          userId: user.userId,
-          preferences: {}
-        }
+    // Persist settings as key/value rows per UserPreference schema
+    const entries = Object.entries(validatedData as Record<string, any>);
+    for (const [key, value] of entries) {
+      await prisma.userPreference.upsert({
+        where: { userId_category_key: { userId: user.userId, category: section, key } },
+        update: { value: String(value), updatedAt: new Date() },
+        create: { userId: user.userId, category: section, key, value: String(value) }
       });
     }
-
-    // Update the specific section
-    const currentPreferences = userPreferences.preferences as any || {};
-    const updatedPreferences = {
-      ...currentPreferences,
-      [section]: validatedData
-    };
-
-    // Save to database
-    const updated = await prisma.userPreference.update({
-      where: { id: userPreferences.id },
-      data: {
-        preferences: updatedPreferences,
-        updatedAt: new Date()
-      }
-    });
 
     // Handle special security settings
     if (section === 'security') {
@@ -158,7 +126,7 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       data: {
         section,
         settings: validatedData,
-        updatedAt: updated.updatedAt
+        updatedAt: new Date()
       }
     });
 
@@ -190,21 +158,9 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}), {
-  windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 setting updates per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `settings-update:${userId}:${ip}`;
-}));
+};
 
-/**
- * GET /api/users/settings
- * 
- * Retrieve user settings for all sections or a specific section
- */
-export const GET = requireAuth(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const { searchParams } = new URL(request.url);
@@ -215,7 +171,14 @@ export const GET = requireAuth(async (request: NextRequest) => {
       where: { userId: user.userId }
     });
 
-    const preferences = userPreferences?.preferences as any || {};
+    let preferences: any = {};
+    if (userPreferences?.value) {
+      try {
+        preferences = JSON.parse(userPreferences.value);
+      } catch (error) {
+        console.error('Failed to parse user preferences:', error);
+      }
+    }
 
     // Return specific section or all settings
     if (section && ['notifications', 'security', 'privacy', 'appearance'].includes(section)) {
@@ -255,7 +218,19 @@ export const GET = requireAuth(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-});
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 10, // 10 setting updates per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `settings-update:${userId}:${ip}`;
+  }
+})));
+
+export const GET = requireAuth(getHandler as any);
 
 /**
  * Get default settings for a section

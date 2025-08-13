@@ -116,14 +116,14 @@ export function RealtimeNotifications() {
                     </span>
                   </div>
                   
-                  {notification.action && (
+                  {'action' in notification && notification.action && (
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={notification.action.onClick}
+                      onClick={(notification.action as { onClick: () => void }).onClick}
                       className="h-6 text-xs"
                     >
-                      {notification.action.label}
+                      {(notification.action as { label: string }).label}
                     </Button>
                   )}
                 </div>

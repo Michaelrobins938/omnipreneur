@@ -4,10 +4,11 @@ import { cn } from '@/lib/utils';
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
+  onValueChange?: (value: string) => void;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, children, placeholder, ...props }, ref) => {
+  ({ className, children, placeholder, onValueChange, ...props }, ref) => {
     return (
       <select
         className={cn(
@@ -15,6 +16,10 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           className
         )}
         ref={ref}
+        onChange={(e) => {
+          props.onChange?.(e);
+          onValueChange?.(e.target.value);
+        }}
         {...props}
       >
         {placeholder && (
@@ -79,15 +84,14 @@ const SelectTrigger = React.forwardRef<
 ));
 SelectTrigger.displayName = 'SelectTrigger';
 
-const SelectValue = React.forwardRef<
-  HTMLSpanElement,
-  React.HTMLAttributes<HTMLSpanElement>
->(({ className, ...props }, ref) => (
-  <span
-    ref={ref}
-    className={cn('block truncate', className)}
-    {...props}
-  />
+interface SelectValueProps extends React.HTMLAttributes<HTMLSpanElement> {
+  placeholder?: string;
+}
+
+const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(({ className, children, placeholder, ...props }, ref) => (
+  <span ref={ref} className={cn('block truncate', className)} {...props}>
+    {children ?? placeholder ?? ''}
+  </span>
 ));
 SelectValue.displayName = 'SelectValue';
 

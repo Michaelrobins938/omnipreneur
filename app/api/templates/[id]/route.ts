@@ -5,12 +5,7 @@ import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
 import { z } from 'zod';
 
-/**
- * GET /api/templates/[id]
- * 
- * Get a specific template
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const getHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -57,19 +52,19 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest, { para
       id: template.id,
       title: template.title,
       content: template.content,
-      description: template.contextData?.description || '',
-      category: template.contextData?.category || 'OTHER',
+      description: (template.contextData as any)?.description || '',
+      category: (template.contextData as any)?.category || 'OTHER',
       tags: template.tags,
-      variables: template.contextData?.variables || [],
-      difficulty: template.contextData?.difficulty || 'BEGINNER',
-      isPublic: template.contextData?.isPublic || false,
+      variables: (template.contextData as any)?.variables || [],
+      difficulty: (template.contextData as any)?.difficulty || 'BEGINNER',
+      isPublic: (template.contextData as any)?.isPublic || false,
       isFavorited: template.isFavorited,
       isArchived: template.isArchived,
       viewCount: template.viewCount,
       copyCount: template.copyCount,
       shareCount: template.shareCount,
-      useCount: template.contextData?.useCount || 0,
-      rating: template.contextData?.rating || 0,
+      useCount: (template.contextData as any)?.useCount || 0,
+      rating: (template.contextData as any)?.rating || 0,
       userRating: template.userRating,
       createdAt: template.createdAt.toISOString(),
       updatedAt: template.updatedAt.toISOString(),
@@ -96,14 +91,7 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest, { para
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `template-get:${userId}:${ip}`;
-}));
+};
 
 const UpdateTemplateSchema = z.object({
   title: z.string().min(1).max(200).optional(),
@@ -116,12 +104,7 @@ const UpdateTemplateSchema = z.object({
   isPublic: z.boolean().optional()
 });
 
-/**
- * PUT /api/templates/[id]
- * 
- * Update a template (only owner can update)
- */
-export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const putHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -161,7 +144,7 @@ export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: 
     if (validatedData.tags) updateData.tags = validatedData.tags;
 
     // Update context data
-    const newContextData = { ...existingTemplate.contextData };
+    const newContextData = { ...(existingTemplate.contextData as any) };
     if (validatedData.description !== undefined) newContextData.description = validatedData.description;
     if (validatedData.category) newContextData.category = validatedData.category;
     if (validatedData.difficulty) newContextData.difficulty = validatedData.difficulty;
@@ -237,21 +220,9 @@ export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: 
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 updates per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `template-update:${userId}:${ip}`;
-})));
+};
 
-/**
- * DELETE /api/templates/[id]
- * 
- * Delete a template (only owner can delete)
- */
-export const DELETE = requireAuth(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const deleteHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -291,7 +262,7 @@ export const DELETE = requireAuth(async (request: NextRequest, { params }: { par
         metadata: {
           templateId: id,
           title: existingTemplate.title,
-          category: existingTemplate.contextData?.category,
+          category: (existingTemplate.contextData as any)?.category,
           timestamp: new Date().toISOString()
         }
       }
@@ -316,7 +287,29 @@ export const DELETE = requireAuth(async (request: NextRequest, { params }: { par
       { status: 500 }
     );
   }
-});
+};
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `template-get:${userId}:${ip}`;
+  }
+}));
+
+export const PUT = requireAuth(withCsrfProtection(withRateLimit(putHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 20, // 20 updates per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `template-update:${userId}:${ip}`;
+  }
+})));
+
+export const DELETE = requireAuth(deleteHandler as any);
 
 /**
  * Extract variables from template content

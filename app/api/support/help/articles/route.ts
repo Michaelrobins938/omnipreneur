@@ -12,12 +12,7 @@ const SearchSchema = z.object({
   offset: z.number().min(0).default(0)
 });
 
-/**
- * GET /api/support/help/articles
- * 
- * Search and retrieve help articles
- */
-export const GET = withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
     
@@ -140,10 +135,13 @@ export const GET = withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 searches per minute
-}, (req: NextRequest) => {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `help-search:${ip}`;
+  limit: 30, // 30 searches per minute
+  key: (req: NextRequest) => {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `help-search:${ip}`;
+  }
 });

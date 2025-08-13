@@ -33,6 +33,7 @@ export default function ProductAccessControl({
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const searchParams = useSearchParams();
   
   // Access now controlled server-side only
@@ -83,18 +84,27 @@ export default function ProductAccessControl({
   if (!hasAccess && demoMode) {
     return (
       <div className="relative">
-        <div className="fixed top-20 left-0 right-0 z-[60] bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 py-3 text-center">
-          <div className="flex items-center justify-center space-x-2">
-            <Zap className="w-5 h-5" />
-            <span className="font-semibold">Demo Mode - Limited functionality enabled</span>
-            <Link 
-              href={`/products/${productId}#pricing`}
-              className="ml-4 bg-white text-orange-600 px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors"
-            >
-              Get Full Access
-            </Link>
+        {!bannerDismissed && (
+          <div className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 py-2 text-center relative z-10">
+            <div className="flex items-center justify-center space-x-2 text-sm">
+              <Zap className="w-4 h-4" />
+              <span className="font-medium">Demo Mode - Limited functionality enabled</span>
+              <Link 
+                href={`/products/${productId}#pricing`}
+                className="ml-4 bg-white text-orange-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-100 transition-colors"
+              >
+                Get Full Access
+              </Link>
+              <button
+                onClick={() => setBannerDismissed(true)}
+                className="ml-2 p-1 hover:bg-orange-700/50 rounded-full transition-colors"
+                aria-label="Dismiss banner"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         <div className="relative">
           {children}
         </div>

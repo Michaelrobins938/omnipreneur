@@ -10,12 +10,7 @@ const BulkMoveSchema = z.object({
   targetFolderId: z.string().optional() // undefined means move to root (no folder)
 });
 
-/**
- * POST /api/content-library/folders/[id]/move
- * 
- * Move multiple content items to a different folder
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const handler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id: sourceFolderId } = params;
@@ -155,11 +150,14 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(handler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 bulk moves per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `bulk-move:${userId}:${ip}`;
+  limit: 20, // 20 bulk moves per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `bulk-move:${userId}:${ip}`;
+  }
 })));

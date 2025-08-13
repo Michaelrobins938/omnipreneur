@@ -50,8 +50,8 @@ export const POST = withRateLimit(async (request: NextRequest) => {
     await prisma.event.create({
       data: {
         userId: user.id,
-        type: 'PASSWORD_RESET_REQUESTED',
-        data: {
+        event: 'PASSWORD_RESET_REQUESTED',
+        metadata: {
           email: user.email,
           timestamp: new Date().toISOString(),
           ip: request.headers.get('x-forwarded-for') || 'unknown'
@@ -93,8 +93,8 @@ export const POST = withRateLimit(async (request: NextRequest) => {
     );
   }
 }, {
+  windowMs: 10 * 60 * 1000, // 10 minutes
   limit: 5, // 5 password reset attempts per 10 minutes per IP
-  windowMs: 10 * 60 * 1000,
   key: (req: NextRequest) => {
     const ip = req.headers.get('x-forwarded-for') || 'ip-unknown';
     return `forgot-password:${ip}`;
@@ -102,7 +102,7 @@ export const POST = withRateLimit(async (request: NextRequest) => {
 });
 
 async function sendPasswordResetEmail(email: string, name: string, token: string) {
-  const transporter = nodemailer.createTransporter({
+  const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: false,

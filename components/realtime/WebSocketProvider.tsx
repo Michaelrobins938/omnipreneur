@@ -255,7 +255,7 @@ export function useRealtimeData<T>(eventType: string, initialData?: T) {
   return data;
 }
 
-export function useRealtimeMetrics() {
+export function useRealtimeMetrics(): { activeUsers: number; aiRequests: number; revenue: number } | undefined {
   return useRealtimeData('metrics');
 }
 
@@ -263,11 +263,11 @@ export function useRealtimeNotifications() {
   return useRealtimeData('notification');
 }
 
-export function useRealtimeUserActivity() {
+export function useRealtimeUserActivity(): { description: string; timestamp: string } | undefined {
   return useRealtimeData('user_activity');
 }
 
-export function useRealtimeSystemHealth() {
+export function useRealtimeSystemHealth(): { status: 'healthy' | 'degraded' | 'unhealthy' } | undefined {
   return useRealtimeData('system_health');
 }
 

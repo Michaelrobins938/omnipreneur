@@ -326,16 +326,7 @@ export class EnhancedAIService extends BaseAIService {
     });
   }
 
-  // Override the base process method
-  async process(input: any): Promise<any> {
-    if (typeof input === 'string') {
-      // Simple string input - convert to request format
-      return this.process({ prompt: input });
-    }
-    
-    // Handle EnhancedAIRequest format
-    return this.process(input as EnhancedAIRequest);
-  }
+  // Remove duplicate process; Base class requires one implementation already provided above
 }
 
 export default EnhancedAIService;

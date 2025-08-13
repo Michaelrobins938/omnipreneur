@@ -135,9 +135,9 @@ export default function AffiliatePortalDemo() {
   };
 
   const exampleAffiliates = [
-    { name: "John's Tech Blog", email: "john@techblog.com", website: "techblog.com", rate: 30 },
-    { name: "Marketing Guru", email: "sarah@marketing.co", website: "marketing.co", rate: 25 },
-    { name: "Startup Weekly", email: "mike@startup.weekly", website: "startup.weekly", rate: 35 }
+    { name: "John's Tech Blog", email: "john@techblog.com", website: "techblog.com", commissionRate: 30 },
+    { name: "Marketing Guru", email: "sarah@marketing.co", website: "marketing.co", commissionRate: 25 },
+    { name: "Startup Weekly", email: "mike@startup.weekly", website: "startup.weekly", commissionRate: 35 }
   ];
 
   return (

@@ -160,9 +160,10 @@ export const POST = withRateLimit(async (request: NextRequest) => {
     );
   }
 }, {
+  windowMs: 10 * 60 * 1000, // 10 minutes
   limit: 5, // 5 password reset attempts per 10 minutes per IP
-  windowMs: 10 * 60 * 1000,
-}, (req: NextRequest) => {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `reset-password:${ip}`;
+  key: (req: NextRequest) => {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `reset-password:${ip}`;
+  }
 });

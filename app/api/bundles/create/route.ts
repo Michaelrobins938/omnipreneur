@@ -126,7 +126,11 @@ export const POST = requireEntitlement('bundle-builder')(withCsrfProtection(with
             price: p.price,
             type: p.type,
             content: p.content,
-            files: p.files,
+            files: (p.files?.filter(f => f.name && f.content && f.type) || []).map(f => ({
+              name: f.name,
+              content: f.content,
+              type: f.type
+            })),
             description: description
           })),
           targetAudience: targetAudience || 'General customers',
@@ -259,14 +263,15 @@ export const POST = requireEntitlement('bundle-builder')(withCsrfProtection(with
     );
   }
 }, {
-  limit: 20,
-  windowMs: 10 * 60 * 1000,
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  limit: 20, // 20 bundle creations per 10 minutes
   key: (req: NextRequest) => {
     const userId = (req as any).user?.userId || 'anonymous';
     const ip = req.headers.get('x-forwarded-for') || 'ip-unknown';
     return `bundles-create:${userId}:${ip}`;
   }
 })));
+
 
 /**
  * Create digital bundle with ZIP packaging and marketing materials
@@ -332,14 +337,10 @@ async function createDigitalBundle(params: {
       // Use AI strategy data for enhanced marketing materials
       marketingMaterials = {
         ...marketingMaterials,
-        bundleDescription: aiStrategy.marketing.bundleDescription,
-        valueProposition: aiStrategy.marketing.valueProposition,
-        headlines: aiStrategy.marketing.headlines,
-        bulletPoints: aiStrategy.marketing.bulletPoints,
-        pricing: aiStrategy.pricing,
-        positioning: aiStrategy.positioning,
-        recommendations: aiStrategy.recommendations
+        productDescription: aiStrategy.marketing.bundleDescription
       };
+      
+      // Log the AI strategy data separately
       try {
         await logAIRequest({
           userId,

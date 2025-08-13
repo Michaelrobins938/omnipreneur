@@ -324,23 +324,25 @@ export default function AutoRewriteEngine() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link href="/auto-rewrite/workspace">
+                <motion.button
+                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaRocket className="w-5 h-5" />
+                  <span>Open Workspace</span>
+                </motion.button>
+              </Link>
+
               <motion.button
                 onClick={() => setIsDemoOpen(true)}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-purple-500 hover:text-purple-400 transition-all duration-300 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <FaPlay className="w-5 h-5" />
                 <span>Try Demo</span>
-              </motion.button>
-
-              <motion.button
-                className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-purple-500 hover:text-purple-400 transition-all duration-300 flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FaDownload className="w-5 h-5" />
-                <span>Download SDK</span>
               </motion.button>
             </div>
 
@@ -578,14 +580,16 @@ export default function AutoRewriteEngine() {
               Join thousands of businesses using AutoRewrite Engine™ to create engaging, optimized content.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>Start Free Trial</span>
-                <FaArrowRight className="w-5 h-5" />
-              </motion.button>
+              <Link href="/auto-rewrite/workspace">
+                <motion.button
+                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span>Open Workspace</span>
+                  <FaArrowRight className="w-5 h-5" />
+                </motion.button>
+              </Link>
               <motion.button
                 className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-purple-500 hover:text-purple-400 transition-all duration-300 flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}

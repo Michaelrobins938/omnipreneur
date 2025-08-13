@@ -20,7 +20,12 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+const Alert = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={`border border-red-700 bg-red-900/20 rounded p-3 ${className || ''}`}>{children}</div>
+);
+const AlertDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={className || "text-sm text-red-200"}>{children}</div>
+);
 
 interface ErrorStateProps {
   type: 'subscription' | 'usage_limit' | 'network' | 'server' | 'timeout' | 'generic';

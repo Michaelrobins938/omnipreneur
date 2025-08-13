@@ -78,7 +78,7 @@ export abstract class BaseAIService {
 
   protected async callAnthropic(prompt: string, systemPrompt?: string): Promise<AIResponse> {
     try {
-      const response = await this.anthropic.messages.create({
+      const response = await (this.anthropic as any).messages.create({
         model: this.config.model || 'claude-3-sonnet-20241022',
         max_tokens: this.config.maxTokens || 2000,
         temperature: this.config.temperature || 0.7,

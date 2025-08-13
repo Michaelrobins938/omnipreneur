@@ -250,20 +250,20 @@ class RealTimeAnalytics {
       take: 10,
       select: {
         id: true,
-        type: true,
+        event: true,
         timestamp: true,
         userId: true,
-        data: true
+        metadata: true
       }
     });
 
     return activities.map(activity => ({
       id: activity.id,
-      type: activity.type,
+      type: activity.event,
       timestamp: activity.timestamp,
       userId: activity.userId,
-      productId: activity.data?.productId,
-      details: activity.data
+      productId: (activity.metadata as any)?.productId,
+      details: activity.metadata as any
     }));
   }
 

@@ -19,7 +19,7 @@ export async function completeClaude(params: {
   maxTokens?: number;
 }): Promise<string> {
   const api = getClaude();
-  const response = await api.messages.create({
+  const response = await (api as any).messages.create({
     model: params.model || 'claude-3-5-sonnet-20241022',
     max_tokens: params.maxTokens ?? config.ai.maxTokens,
     temperature: params.temperature ?? config.ai.temperature,

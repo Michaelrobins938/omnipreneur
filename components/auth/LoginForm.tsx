@@ -34,7 +34,7 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
 
       if (!res || res.success === false) {
         const message = (res && res.error?.message) || res.error || 'Login failed';
-        throw new Error(message);
+        throw new Error(typeof message === 'string' ? message : (message?.message || 'Login failed'));
       }
 
       const user = (res.data as any)?.user || (res as any).user;

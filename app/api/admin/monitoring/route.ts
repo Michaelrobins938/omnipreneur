@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import { withCsrfProtection } from '@/lib/security/csrf';
-import { withRateLimit } from '@/lib/rate-limit';
+import { withRateLimit } from '@/lib/rate-limit/enhanced-rate-limit';
 import { 
   generatePerformanceReport, 
   getRealTimeMetrics, 
@@ -111,7 +111,7 @@ export const GET = requireAuth(
           }
         }, { status: 500 });
       }
-    }, { maxRequests: 100, windowMs: 60000 }) // Higher rate limit for admin
+    }, { max: 100, windowMs: 60000 }) // Higher rate limit for admin
   )
 );
 
@@ -169,7 +169,7 @@ export const POST = requireAuth(
           }
         }, { status: 500 });
       }
-    }, { maxRequests: 50, windowMs: 60000 })
+    }, { max: 50, windowMs: 60000 })
   )
 );
 

@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withRateLimit } from '@/lib/rate-limit';
 import prisma from '@/lib/db';
 
-/**
- * GET /api/support/help/articles/[id]
- * 
- * Get a specific help article
- */
-export const GET = withRateLimit(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const getHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const { id } = params;
 
@@ -140,10 +135,13 @@ Remember, our support team is here to help you succeed. Don't hesitate to reach 
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `help-article:${ip}`;
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `help-article:${ip}`;
+  }
 });

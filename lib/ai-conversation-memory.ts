@@ -55,8 +55,8 @@ export class AIConversationMemory {
           productContext: data.productContext,
           sessionId: data.sessionId || `session_${Date.now()}`,
           title: data.title || this.generateConversationTitle(data.initialMessage?.content),
-          messages: data.initialMessage ? [data.initialMessage] : [],
-          context: data.context || {},
+          messages: (data.initialMessage ? [data.initialMessage] : []) as any,
+          context: (data.context || {}) as any,
           messageCount: data.initialMessage ? 1 : 0,
           lastMessageAt: new Date()
         }
@@ -87,7 +87,7 @@ export class AIConversationMemory {
         throw new Error('Conversation not found');
       }
 
-      const existingMessages = conversation.messages as ConversationMessage[];
+      const existingMessages = conversation.messages as unknown as ConversationMessage[];
       const updatedMessages = [...existingMessages, message];
       
       // Update context if provided
@@ -99,8 +99,8 @@ export class AIConversationMemory {
       const updatedConversation = await prisma.aIConversation.update({
         where: { id: conversationId },
         data: {
-          messages: updatedMessages,
-          context: updatedContext,
+          messages: updatedMessages as any,
+          context: updatedContext as any,
           messageCount: updatedMessages.length,
           lastMessageAt: new Date(),
           totalTokens: { increment: this.estimateTokens(message.content) }
@@ -129,8 +129,8 @@ export class AIConversationMemory {
 
       return {
         ...conversation,
-        messages: conversation.messages as ConversationMessage[],
-        context: conversation.context as ConversationContext
+        messages: conversation.messages as unknown as ConversationMessage[],
+        context: conversation.context as unknown as ConversationContext
       };
     } catch (error) {
       console.error('Error getting conversation:', error);
@@ -329,7 +329,7 @@ export class AIConversationMemory {
 
       // Filter by message content (client-side for now)
       const filteredConversations = conversations.filter(conv => {
-        const messages = conv.messages as ConversationMessage[] || [];
+        const messages = (conv as any).messages as ConversationMessage[] || [];
         return messages.some(msg => 
           msg.content.toLowerCase().includes(query.toLowerCase())
         );

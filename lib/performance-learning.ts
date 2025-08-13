@@ -554,9 +554,9 @@ export class PerformanceLearningService {
 
     // Analyze each metric type
     for (const [metricName, metricData] of Object.entries(metricsByType)) {
-      if (metricData.length < 5) continue; // Need enough data
+      if (!Array.isArray(metricData) || metricData.length < 5) continue; // Need enough data
 
-      const values = metricData.map(m => m.metricValue);
+      const values = (metricData as any[]).map((m: any) => m.metricValue);
       const average = values.reduce((a, b) => a + b, 0) / values.length;
       const trend = this.calculateTrend(values);
 

@@ -3,12 +3,7 @@ import { requireAuth } from '@/lib/auth';
 import { withRateLimit } from '@/lib/rate-limit';
 import prisma from '@/lib/db';
 
-/**
- * GET /api/templates/stats
- * 
- * Get template library statistics for the user
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -56,14 +51,14 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
 
     // Count by category
     const totalByCategory = templates.reduce((acc, template) => {
-      const category = template.contextData?.category || 'OTHER';
+      const category = (template.contextData as any)?.category || 'OTHER';
       acc[category] = (acc[category] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
     // Count by difficulty
     const totalByDifficulty = templates.reduce((acc, template) => {
-      const difficulty = template.contextData?.difficulty || 'BEGINNER';
+      const difficulty = (template.contextData as any)?.difficulty || 'BEGINNER';
       acc[difficulty] = (acc[difficulty] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -118,11 +113,14 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `template-stats:${userId}:${ip}`;
+  limit: 20, // 20 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `template-stats:${userId}:${ip}`;
+  }
 }));

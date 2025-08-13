@@ -9,12 +9,7 @@ const CookiePreferencesSchema = z.object({
   preferences: z.record(z.string(), z.boolean())
 });
 
-/**
- * POST /api/legal/cookie-preferences
- * 
- * Save user's cookie preferences
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -109,21 +104,9 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 preference updates per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `cookie-preferences:${userId}:${ip}`;
-})));
+};
 
-/**
- * GET /api/legal/cookie-preferences
- * 
- * Get user's current cookie preferences
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -175,11 +158,24 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `cookie-preferences-get:${userId}:${ip}`;
+  limit: 10, // 10 preference updates per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `cookie-preferences:${userId}:${ip}`;
+  }
+})));
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `cookie-preferences-get:${userId}:${ip}`;
+  }
 }));

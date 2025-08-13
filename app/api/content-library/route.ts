@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0');
 
     const result = await ContentLibraryService.searchContent({
-      userId: user.id,
+      userId: user.userId,
       query,
       contentType,
       tags,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     
     const contentItem = await ContentLibraryService.autoSaveContent({
-      userId: user.id,
+      userId: user.userId,
       ...data
     });
 

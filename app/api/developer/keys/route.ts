@@ -14,12 +14,7 @@ const CreateAPIKeySchema = z.object({
   description: z.string().optional()
 });
 
-/**
- * GET /api/developer/keys
- * 
- * Get user's API keys
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -102,21 +97,9 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `api-keys:${userId}:${ip}`;
-}));
+};
 
-/**
- * POST /api/developer/keys
- * 
- * Create a new API key
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -124,14 +107,10 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
     const validatedData = CreateAPIKeySchema.parse(body);
 
     // Check if user has reached API key limit
-    const existingKeys = await prisma.event.countMany({
+    const existingKeys = await prisma.event.count({
       where: {
         userId: user.userId,
         event: 'API_KEY_CREATED',
-        metadata: {
-          path: ['status'],
-          not: 'revoked'
-        }
       }
     });
 
@@ -259,13 +238,26 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 5 // 5 key creations per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `api-key-create:${userId}:${ip}`;
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `developer-keys:${userId}:${ip}`;
+  }
+}));
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 5, // 5 key creations per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `developer-keys-create:${userId}:${ip}`;
+  }
 })));
 
 /**

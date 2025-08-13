@@ -363,8 +363,14 @@ export default function NOVUSProtocolDemo() {
           <p className="text-zinc-400 mb-8">Get unlimited access to NOVUS Protocol and 25+ other AI tools</p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
+            <Link href={`/auth/signin?callbackUrl=${encodeURIComponent('/novus/workspace')}`}>
               <button className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2">
+                <span>Open NOVUS Workspace</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </Link>
+            <Link href="/auth/register">
+              <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 flex items-center justify-center space-x-2">
                 <span>Start Free Trial</span>
                 <ArrowRight className="w-5 h-5" />
               </button>

@@ -23,8 +23,17 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+const Progress = (props: { value: number; className?: string }) => (
+  <div className={props.className}>
+    <div className="w-full bg-zinc-800 rounded h-2">
+      <div className="bg-blue-500 h-2 rounded" style={{ width: `${props.value}%` }} />
+    </div>
+  </div>
+);
+const Tabs = ({ children, className }: { children: React.ReactNode; defaultValue?: string; className?: string }) => <div className={className}>{children}</div> as any;
+const TabsContent = ({ children, className }: { children: React.ReactNode; value?: string; className?: string }) => <div className={className}>{children}</div> as any;
+const TabsList = ({ children, className }: { children: React.ReactNode; className?: string }) => <div className={className || 'flex space-x-2'}>{children}</div> as any;
+const TabsTrigger = ({ children }: { children: React.ReactNode; value?: string }) => <button className="px-2 py-1 bg-zinc-800 rounded">{children}</button> as any;
 
 interface RewriteAnalysis {
   originalStats: {

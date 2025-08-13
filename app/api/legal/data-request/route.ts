@@ -12,12 +12,7 @@ const DataRequestSchema = z.object({
   specificData: z.array(z.string()).optional()
 });
 
-/**
- * POST /api/legal/data-request
- * 
- * Handle GDPR/CCPA data requests (export, deletion, correction)
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -142,21 +137,9 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3 // Maximum 3 data requests per hour
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `data-request:${userId}:${ip}`;
-})));
+};
 
-/**
- * GET /api/legal/data-request
- * 
- * Get user's data request history
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -175,11 +158,11 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
 
     const formattedRequests = requests.map(request => ({
       id: request.id,
-      requestId: request.metadata?.requestId,
+      requestId: (request.metadata && typeof request.metadata === 'object' && 'requestId' in request.metadata) ? (request.metadata as any).requestId : null,
       type: request.event.replace('DATA_REQUEST_', '').toLowerCase(),
-      status: request.metadata?.status || 'pending',
+      status: (request.metadata && typeof request.metadata === 'object' && 'status' in request.metadata) ? (request.metadata as any).status : 'pending',
       submittedAt: request.timestamp.toISOString(),
-      reason: request.metadata?.reason
+      reason: (request.metadata && typeof request.metadata === 'object' && 'reason' in request.metadata) ? (request.metadata as any).reason : null
     }));
 
     return NextResponse.json({
@@ -201,13 +184,26 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 60 * 1000, // 1 hour
+  limit: 3, // Maximum 3 data requests per hour
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `data-request:${userId}:${ip}`;
+  }
+})));
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `data-request-history:${userId}:${ip}`;
+  limit: 10, // 10 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `data-request-history:${userId}:${ip}`;
+  }
 }));
 
 /**

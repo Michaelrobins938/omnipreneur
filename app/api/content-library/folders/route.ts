@@ -5,12 +5,7 @@ import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
 import { z } from 'zod';
 
-/**
- * GET /api/content-library/folders
- * 
- * Get all folders for the user
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -66,14 +61,7 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-folders:${userId}:${ip}`;
-}));
+};
 
 const CreateFolderSchema = z.object({
   name: z.string().min(1).max(100),
@@ -81,12 +69,7 @@ const CreateFolderSchema = z.object({
   parentId: z.string().optional()
 });
 
-/**
- * POST /api/content-library/folders
- * 
- * Create a new folder
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -202,11 +185,24 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 folder creations per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `folder-create:${userId}:${ip}`;
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-folders:${userId}:${ip}`;
+  }
+}));
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 10, // 10 folder creations per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `folder-create:${userId}:${ip}`;
+  }
 })));

@@ -6,15 +6,10 @@ import prisma from '@/lib/db';
 import { z } from 'zod';
 
 const ActionSchema = z.object({
-  action: z.enum(['view', 'copy', 'share', 'use', 'download'])
+  action: z.enum(['view', 'copy', 'share', 'download'])
 });
 
-/**
- * POST /api/templates/[id]/action
- * 
- * Track user actions on templates (view, copy, share, use, download)
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const postHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -22,30 +17,21 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
 
     const { action } = ActionSchema.parse(body);
 
-    // Check if template exists and is accessible
-    const template = await prisma.contentLibraryItem.findFirst({
+    // Check if content item exists and belongs to user
+    const contentItem = await prisma.contentLibraryItem.findFirst({
       where: {
         id,
-        contentType: 'TEMPLATE',
-        OR: [
-          { userId: user.userId },
-          { 
-            AND: [
-              { userId: { not: user.userId } },
-              { contextData: { path: ['isPublic'], equals: true } }
-            ]
-          }
-        ]
+        userId: user.userId
       }
     });
 
-    if (!template) {
+    if (!contentItem) {
       return NextResponse.json(
         { 
           success: false, 
           error: { 
-            code: 'TEMPLATE_NOT_FOUND', 
-            message: 'Template not found' 
+            code: 'CONTENT_NOT_FOUND', 
+            message: 'Content item not found' 
           } 
         },
         { status: 404 }
@@ -57,9 +43,6 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       lastAccessedAt: new Date()
     };
 
-    // Update context data for use count
-    let newContextData = { ...template.contextData };
-
     switch (action) {
       case 'view':
         updateData.viewCount = { increment: 1 };
@@ -70,17 +53,13 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       case 'share':
         updateData.shareCount = { increment: 1 };
         break;
-      case 'use':
-        newContextData.useCount = (newContextData.useCount || 0) + 1;
-        updateData.contextData = newContextData;
-        break;
       case 'download':
         // For future use when download functionality is implemented
         break;
     }
 
-    // Update template
-    const updatedTemplate = await prisma.contentLibraryItem.update({
+    // Update content item
+    const updatedItem = await prisma.contentLibraryItem.update({
       where: { id },
       data: updateData
     });
@@ -89,45 +68,28 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
     await prisma.event.create({
       data: {
         userId: user.userId,
-        event: `TEMPLATE_${action.toUpperCase()}`,
+        event: `CONTENT_${action.toUpperCase()}`,
         metadata: {
-          templateId: id,
-          title: template.title,
-          category: template.contextData?.category,
-          difficulty: template.contextData?.difficulty,
-          isOwner: template.userId === user.userId,
+          contentId: id,
+          contentType: contentItem.contentType,
+          title: contentItem.title,
           timestamp: new Date().toISOString()
         }
       }
     });
 
-    // Get the new count based on action
-    let newCount = 0;
-    switch (action) {
-      case 'view':
-        newCount = updatedTemplate.viewCount;
-        break;
-      case 'copy':
-        newCount = updatedTemplate.copyCount;
-        break;
-      case 'share':
-        newCount = updatedTemplate.shareCount;
-        break;
-      case 'use':
-        newCount = updatedTemplate.contextData?.useCount || 0;
-        break;
-    }
-
     return NextResponse.json({
       success: true,
       data: {
         action,
-        newCount
+        newCount: action === 'view' ? updatedItem.viewCount :
+                  action === 'copy' ? updatedItem.copyCount :
+                  action === 'share' ? updatedItem.shareCount : 0
       }
     });
 
   } catch (error: any) {
-    console.error('Template action error:', error);
+    console.error('Content action error:', error);
     
     if (error.name === 'ZodError') {
       return NextResponse.json(
@@ -154,11 +116,14 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 50 // 50 actions per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `template-action:${userId}:${ip}`;
+  limit: 50, // 50 actions per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-action:${userId}:${ip}`;
+  }
 })));

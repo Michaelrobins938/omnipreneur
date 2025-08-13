@@ -77,7 +77,7 @@ export default function VerifyEmailPage() {
       
       const response = await apiPost('/api/auth/verify-email', {
         email,
-      }, 'PUT');
+      }, { method: 'PUT' });
 
       if (response.success) {
         toast.success('Verification Email Sent', 'Please check your inbox for a new verification link');

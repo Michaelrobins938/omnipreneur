@@ -128,9 +128,10 @@ export const POST = withRateLimit(async (request: NextRequest) => {
     );
   }
 }, {
+  windowMs: 60 * 1000, // 1 minute
   limit: 10, // 10 validation attempts per minute per IP
-  windowMs: 60 * 1000,
-}, (req: NextRequest) => {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `validate-reset-token:${ip}`;
+  key: (req: NextRequest) => {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `validate-reset-token:${ip}`;
+  }
 });

@@ -6,20 +6,10 @@ import { withRateLimit } from '@/lib/rate-limit';
 import { withCsrfProtection } from '@/lib/security/csrf';
 
 const stripe = new Stripe(process.env['STRIPE_SECRET_KEY'] || '', {
-  apiVersion: '2025-06-30.basil',
+  apiVersion: '2023-10-16',
 });
 
-/**
- * GET /api/payments/verify
- * 
- * Verify payment status using session_id or payment_intent
- * Returns payment details for display on success/failure pages
- * 
- * Query Parameters:
- * - session_id: Stripe checkout session ID
- * - payment_intent: Stripe payment intent ID
- */
-export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('session_id');
@@ -78,13 +68,16 @@ export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: 
       { status: 500 }
     );
   }
-}), {
+};
+
+export const GET = requireAuth(withRateLimit(withCsrfProtection(getHandler as any), {
   windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 requests per minute per user
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `payment-verify:${userId}:${ip}`;
+  limit: 10, // 10 requests per minute per user
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `payment-verify:${userId}:${ip}`;
+  }
 }));
 
 /**

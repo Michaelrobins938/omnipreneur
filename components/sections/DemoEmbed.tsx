@@ -51,29 +51,48 @@ export default function DemoEmbed() {
         >
           {/* Demo Video Player - Professional branded thumbnail */}
           <div className="relative aspect-video bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-2xl overflow-hidden border border-zinc-700/50">
-            {/* Branded thumbnail background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30" />
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px_32px]" />
-            
-            {/* Thumbnail content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Professional play button */}
-              <motion.button
-                onClick={handleDemoClick}
-                className="group relative w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 transform hover:scale-110 border border-white/20"
-                whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
-                whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
-              >
-                <Play className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" />
+            {isPlaying ? (
+              /* Demo content - In a real implementation, this would be an actual video embed */
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-6xl font-bold mb-4"
+                  >
+                    🚀
+                  </motion.div>
+                  <h3 className="text-2xl font-bold mb-2">Demo Loading...</h3>
+                  <p className="text-blue-100">Experience the Omnipreneur platform</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Branded thumbnail background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30" />
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px_32px]" />
                 
-                {/* Elegant pulse animation */}
-                {!prefersReducedMotion && (
-                  <>
-                    <div className="absolute inset-0 rounded-full border-2 border-blue-400/40 animate-ping"></div>
-                    <div className="absolute inset-0 rounded-full border border-purple-400/30 animate-pulse"></div>
-                  </>
-                )}
-              </motion.button>
+                {/* Thumbnail content */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Professional play button */}
+                  <motion.button
+                    onClick={handleDemoClick}
+                    className="group relative w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 transform hover:scale-110 border border-white/20"
+                    whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
+                    whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
+                  >
+                    <Play className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" />
+                    
+                    {/* Elegant pulse animation */}
+                    {!prefersReducedMotion && (
+                      <>
+                        <div className="absolute inset-0 rounded-full border-2 border-blue-400/40 animate-ping"></div>
+                        <div className="absolute inset-0 rounded-full border border-purple-400/30 animate-pulse"></div>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
 
                 {/* Demo highlights overlay */}
                 <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
@@ -100,23 +119,7 @@ export default function DemoEmbed() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              /* Demo content - In a real implementation, this would be an actual video embed */
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-6xl font-bold mb-4"
-                  >
-                    🚀
-                  </motion.div>
-                  <h3 className="text-2xl font-bold mb-2">Demo Loading...</h3>
-                  <p className="text-blue-100">Experience the Omnipreneur platform</p>
-                </div>
-              </div>
+              </>
             )}
           </div>
 

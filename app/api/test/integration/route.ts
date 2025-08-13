@@ -30,7 +30,7 @@ export const GET = requireAuth(async (request: NextRequest) => {
 
     console.log('Starting integration tests...');
     
-    const testResults = {
+    const testResults: any = {
       timestamp: new Date().toISOString(),
       category,
       tests: {},
@@ -94,7 +94,7 @@ export const GET = requireAuth(async (request: NextRequest) => {
 });
 
 async function runDatabaseTests() {
-  const tests = {};
+  const tests: any = {};
 
   // Test 1: Database Connection
   tests.connection = await runTest('Database Connection', async () => {
@@ -123,7 +123,7 @@ async function runDatabaseTests() {
 
   // Test 3: AI Request Logging
   tests.aiRequestLogging = await runTest('AI Request Logging', async () => {
-    const recentRequests = await prisma.aiRequest.count({
+    const recentRequests = await prisma.aIRequest.count({
       where: {
         createdAt: {
           gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Last 24 hours
@@ -139,7 +139,7 @@ async function runDatabaseTests() {
     const start = Date.now();
     
     // Test a complex query that should use indexes
-    await prisma.aiRequest.findMany({
+    await prisma.aIRequest.findMany({
       where: {
         createdAt: {
           gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
@@ -165,7 +165,7 @@ async function runDatabaseTests() {
 }
 
 async function runAIServiceTests(quick: boolean) {
-  const tests = {};
+  const tests: any = {};
 
   // Test 1: OpenAI Connection
   tests.openaiConnection = await runTest('OpenAI Service', async () => {
@@ -241,7 +241,7 @@ async function runAIServiceTests(quick: boolean) {
 }
 
 async function runAPITests() {
-  const tests = {};
+  const tests: any = {};
 
   // Test 1: Analytics Endpoints
   tests.analyticsEndpoints = await runTest('Analytics API', async () => {
@@ -301,7 +301,7 @@ async function runAPITests() {
 }
 
 async function runWebSocketTests() {
-  const tests = {};
+  const tests: any = {};
 
   // Test 1: WebSocket Server
   tests.websocketServer = await runTest('WebSocket Server', async () => {
@@ -338,7 +338,11 @@ async function runWebSocketTests() {
 }
 
 async function runAuthTests() {
-  const tests = {};
+  const tests: {
+    jwtConfig?: any;
+    authMiddleware?: any;
+    userRoles?: any;
+  } = {};
 
   // Test 1: JWT Configuration
   tests.jwtConfig = await runTest('JWT Configuration', async () => {

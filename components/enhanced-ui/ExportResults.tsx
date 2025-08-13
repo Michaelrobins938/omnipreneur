@@ -22,8 +22,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+const Checkbox = ({ checked, onChange, onCheckedChange, className, id }: { checked?: boolean; onChange?: (e: any) => void; onCheckedChange?: (checked: boolean) => void; className?: string; id?: string }) => (
+  <input id={id} type="checkbox" checked={!!checked} onChange={(e) => { onChange?.(e); onCheckedChange?.(e.currentTarget.checked); }} className={className} />
+);
+const Tabs = ({ children, className }: { children: React.ReactNode; defaultValue?: string; className?: string }) => <div className={className}>{children}</div> as any;
+const TabsContent = ({ children, className }: { children: React.ReactNode; value?: string; className?: string }) => <div className={className}>{children}</div> as any;
+const TabsList = ({ children, className }: { children: React.ReactNode; className?: string }) => <div className={className || 'flex space-x-2'}>{children}</div> as any;
+const TabsTrigger = ({ children }: { children: React.ReactNode; value?: string }) => <button className="px-2 py-1 bg-zinc-800 rounded">{children}</button> as any;
 
 interface ExportResultsProps {
   data: any;

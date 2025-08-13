@@ -13,7 +13,13 @@ import {
   BarChart3
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+const Progress = (props: { value: number; className?: string }) => (
+  <div className={props.className}>
+    <div className="w-full bg-zinc-800 rounded h-2">
+      <div className="bg-blue-500 h-2 rounded" style={{ width: `${props.value}%` }} />
+    </div>
+  </div>
+);
 
 interface LoadingStateProps {
   type: 'content' | 'rewrite' | 'bundle' | 'niche';

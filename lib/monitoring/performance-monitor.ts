@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/db';
 
 export interface PerformanceMetric {
   id?: string;
@@ -47,20 +45,28 @@ export interface PerformanceReport {
  */
 export async function logPerformanceMetric(metric: PerformanceMetric): Promise<void> {
   try {
-    await prisma.performanceLog.create({
+    // Persist as an Event with rich metadata since Prisma PerformanceMetric schema differs
+    if (!metric.userId) {
+      // If no userId is provided, skip DB write to satisfy foreign key constraint
+      console.warn('logPerformanceMetric: missing userId, skipping DB write');
+      return;
+    }
+    await prisma.event.create({
       data: {
-        service: metric.service,
-        operation: metric.operation,
         userId: metric.userId,
-        duration: metric.duration,
-        success: metric.success,
-        errorType: metric.errorType,
-        cacheHit: metric.cacheHit || false,
-        modelUsed: metric.modelUsed,
-        inputSize: metric.inputSize,
-        outputSize: metric.outputSize,
-        timestamp: metric.timestamp,
-        metadata: metric.metadata ? JSON.stringify(metric.metadata) : null
+        event: 'PERFORMANCE_METRIC',
+        metadata: {
+          service: metric.service,
+          operation: metric.operation,
+          duration: metric.duration,
+          success: metric.success,
+          errorType: metric.errorType,
+          cacheHit: metric.cacheHit || false,
+          modelUsed: metric.modelUsed,
+          inputSize: metric.inputSize,
+          outputSize: metric.outputSize
+        },
+        timestamp: metric.timestamp
       }
     });
   } catch (error) {
@@ -130,14 +136,25 @@ export async function generatePerformanceReport(
   endDate: Date
 ): Promise<PerformanceReport> {
   try {
-    const metrics = await prisma.performanceLog.findMany({
+    const events = await prisma.event.findMany({
       where: {
         timestamp: {
           gte: startDate,
           lte: endDate
-        }
+        },
+        event: 'PERFORMANCE_METRIC'
       }
     });
+
+    const metrics = events.map(e => ({
+      service: (e.metadata as any)?.service as string,
+      operation: (e.metadata as any)?.operation as string,
+      duration: Number((e.metadata as any)?.duration) || 0,
+      success: Boolean((e.metadata as any)?.success),
+      cacheHit: Boolean((e.metadata as any)?.cacheHit),
+      errorType: (e.metadata as any)?.errorType as string | undefined,
+      timestamp: e.timestamp
+    }));
 
     const totalRequests = metrics.length;
     const successfulRequests = metrics.filter(m => m.success).length;
@@ -182,7 +199,7 @@ export async function generatePerformanceReport(
     // Performance trends by hour
     const hourlyMap = new Map<number, { totalTime: number; count: number }>();
     metrics.forEach(metric => {
-      const hour = metric.timestamp.getHours();
+      const hour = (metric.timestamp as Date).getHours();
       if (!hourlyMap.has(hour)) {
         hourlyMap.set(hour, { totalTime: 0, count: 0 });
       }
@@ -226,13 +243,21 @@ export async function getRealTimeMetrics(): Promise<{
   try {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
     
-    const recentMetrics = await prisma.performanceLog.findMany({
+    const recentEvents = await prisma.event.findMany({
       where: {
         timestamp: {
           gte: fiveMinutesAgo
-        }
+        },
+        event: 'PERFORMANCE_METRIC'
       }
     });
+
+    const recentMetrics = recentEvents.map(e => ({
+      service: (e.metadata as any)?.service as string,
+      duration: Number((e.metadata as any)?.duration) || 0,
+      success: Boolean((e.metadata as any)?.success),
+      cacheHit: Boolean((e.metadata as any)?.cacheHit)
+    }));
 
     const currentLoad = recentMetrics.length;
     const avgResponseTimeLast5Min = recentMetrics.length > 0
@@ -247,7 +272,7 @@ export async function getRealTimeMetrics(): Promise<{
       ? (recentMetrics.filter(m => m.cacheHit).length / recentMetrics.length) * 100
       : 0;
 
-    const activeServices = [...new Set(recentMetrics.map(m => m.service))];
+    const activeServices = [...new Set(recentMetrics.map(m => m.service).filter(Boolean))] as string[];
 
     return {
       currentLoad,
@@ -326,8 +351,9 @@ export async function cleanupOldLogs(daysToKeep: number = 30): Promise<number> {
   try {
     const cutoffDate = new Date(Date.now() - daysToKeep * 24 * 60 * 60 * 1000);
     
-    const result = await prisma.performanceLog.deleteMany({
+    const result = await prisma.event.deleteMany({
       where: {
+        event: 'PERFORMANCE_METRIC',
         timestamp: {
           lt: cutoffDate
         }

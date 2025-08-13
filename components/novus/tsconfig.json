@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  }
+}

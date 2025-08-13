@@ -16,12 +16,7 @@ const CreateTemplateSchema = z.object({
   isPublic: z.boolean().default(false)
 });
 
-/**
- * GET /api/templates
- * 
- * Search and retrieve templates based on filters
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const { searchParams } = new URL(request.url);
@@ -137,17 +132,17 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       id: template.id,
       title: template.title,
       content: template.content,
-      description: template.contextData?.description || '',
-      category: template.contextData?.category || 'OTHER',
+      description: (template.contextData as any)?.description || '',
+      category: (template.contextData as any)?.category || 'OTHER',
       tags: template.tags,
-      variables: template.contextData?.variables || [],
-      difficulty: template.contextData?.difficulty || 'BEGINNER',
-      isPublic: template.contextData?.isPublic || false,
+      variables: (template.contextData as any)?.variables || [],
+      difficulty: (template.contextData as any)?.difficulty || 'BEGINNER',
+      isPublic: (template.contextData as any)?.isPublic || false,
       isFavorited: template.isFavorited,
       viewCount: template.viewCount,
       copyCount: template.copyCount,
-      useCount: template.contextData?.useCount || 0,
-      rating: template.contextData?.rating || 0,
+      useCount: (template.contextData as any)?.useCount || 0,
+      rating: (template.contextData as any)?.rating || 0,
       createdAt: template.createdAt.toISOString(),
       updatedAt: template.updatedAt.toISOString(),
       author: template.user
@@ -176,21 +171,9 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 searches per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `templates-search:${userId}:${ip}`;
-}));
+};
 
-/**
- * POST /api/templates
- * 
- * Create a new template
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const body = await request.json();
@@ -270,13 +253,26 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const GET = requireAuth(withRateLimit(getHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 10 // 10 template creations per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `templates-create:${userId}:${ip}`;
+  limit: 30, // 30 searches per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `templates-search:${userId}:${ip}`;
+  }
+}));
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 10, // 10 template creations per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `templates-create:${userId}:${ip}`;
+  }
 })));
 
 /**

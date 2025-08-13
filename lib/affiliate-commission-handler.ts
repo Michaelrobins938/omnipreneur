@@ -232,7 +232,7 @@ export async function handleSubscriptionRefund(
       }
     });
 
-    return { cancelled: true, amount: commission?.amount || 0 };
+    return { cancelled: true, amount: 0 };
 
   } catch (error) {
     console.error('Error handling subscription refund:', error);
@@ -398,7 +398,7 @@ function getTopPlans(convertedReferrals: any[]) {
   }, {} as Record<string, number>);
 
   return Object.entries(planCounts)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (Number(b) || 0) - (Number(a) || 0))
     .slice(0, 3)
     .map(([plan, count]) => ({ plan, conversions: count }));
 }

@@ -94,10 +94,10 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
         stats: affiliateStats,
         recentCommissions: recentCommissions.map(commission => ({
           id: commission.id,
-          amount: commission.metadata?.amount || 0,
-          type: commission.metadata?.type || 'unknown',
+          amount: (commission.metadata as any)?.amount || 0,
+          type: (commission.metadata as any)?.type || 'unknown',
           date: commission.timestamp.toISOString(),
-          referralId: commission.metadata?.referralId
+          referralId: (commission.metadata as any)?.referralId
         }))
       }
     });
@@ -118,9 +118,10 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `affiliate-stats:${userId}:${ip}`;
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `affiliate-stats:${userId}:${ip}`;
+  }
 }));

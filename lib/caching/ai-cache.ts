@@ -27,7 +27,7 @@ try {
 /**
  * Generate cache key from request parameters
  */
-function generateCacheKey(service: string, params: any): string {
+export function generateCacheKey(service: string, params: any): string {
   const normalizedParams = JSON.stringify(params, Object.keys(params).sort());
   const hash = createHash('sha256').update(normalizedParams).digest('hex').substring(0, 16);
   return `${CACHE_PREFIX}:${service}:${hash}`;

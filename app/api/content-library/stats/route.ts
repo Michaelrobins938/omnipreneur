@@ -90,7 +90,7 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
 
     const recentActivity = recentEvents.map(event => ({
       id: event.id,
-      title: event.metadata?.title || 'Unknown Content',
+      title: (event.metadata && typeof event.metadata === 'object' && 'title' in event.metadata) ? (event.metadata as any).title : 'Unknown Content',
       action: event.event.replace('CONTENT_', '').toLowerCase(),
       timestamp: event.timestamp.toISOString()
     }));
@@ -124,9 +124,10 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-stats:${userId}:${ip}`;
+  limit: 20, // 20 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-stats:${userId}:${ip}`;
+  }
 }));

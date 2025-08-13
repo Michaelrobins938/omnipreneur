@@ -42,12 +42,12 @@ export interface CALResult extends AIResponse {
 }
 
 export class CALEngine extends BaseAIService {
-  private config: CALConfig;
+  private calConfig: CALConfig;
   private layers: CALLayer[] = [];
 
   constructor(calConfig: CALConfig) {
     super(calConfig.primaryModel);
-    this.config = calConfig;
+    this.calConfig = calConfig;
     this.initializeLayers();
   }
 
@@ -181,7 +181,7 @@ export class CALEngine extends BaseAIService {
           primary: { latency: 2000, quality: 0.95 },
           secondary: { latency: 1500, quality: 0.85 }
         },
-        parallel: this.config.performance.parallelProcessing
+        parallel: this.calConfig.performance.parallelProcessing
       };
     }
     
@@ -209,16 +209,21 @@ export class CALEngine extends BaseAIService {
     
     try {
       // Execute primary model
-      const primaryService = new BaseAIService(primaryModel);
+      class InlineAIService extends BaseAIService {
+        async process(_input: any): Promise<any> {
+          throw new Error('Not implemented');
+        }
+      }
+      const primaryService = new InlineAIService(primaryModel);
       const primaryResult = await primaryService['generateWithAI'](prompt, systemPrompt);
       
-      if (primaryResult.success && this.config.qualityThreshold <= 0.8) {
+      if (primaryResult.success && this.calConfig.qualityThreshold <= 0.8) {
         return primaryResult;
       }
       
       // If primary fails or quality threshold not met, try secondary
-      if (secondaryModel && this.config.enableFallback) {
-        const secondaryService = new BaseAIService(secondaryModel);
+      if (secondaryModel && this.calConfig.enableFallback) {
+        const secondaryService = new InlineAIService(secondaryModel);
         const secondaryResult = await secondaryService['generateWithAI'](prompt, systemPrompt);
         
         if (secondaryResult.success) {
@@ -235,7 +240,7 @@ export class CALEngine extends BaseAIService {
   }
 
   private async calculateQualityScore(content: string, originalPrompt: string): Promise<number> {
-    if (!this.config.enableQualityScoring || !content) {
+    if (!this.calConfig.enableQualityScoring || !content) {
       return 0.75; // Default score
     }
     
@@ -280,7 +285,7 @@ Respond with only a number between 0.0 and 1.0.`;
     const tokenEfficiency = tokens > 0 ? Math.max(0, 1 - (tokens / 4000)) : 0.5;
     
     // Cost efficiency: factor in processing time and token usage
-    const costEfficiency = Math.max(0, 1 - (processingTime / this.config.performance.maxLatency));
+    const costEfficiency = Math.max(0, 1 - (processingTime / this.calConfig.performance.maxLatency));
     
     // Accuracy score: based on successful completion
     const accuracyScore = result.success ? 0.9 : 0.3;
@@ -303,12 +308,12 @@ Respond with only a number between 0.0 and 1.0.`;
       await logAIRequest({
         userId,
         productId: `${productId}_cal`,
-        modelUsed: `CAL_${this.config.primaryModel.model}`,
+        modelUsed: `CAL_${this.calConfig.primaryModel.model}`,
         inputTokens: result.usage?.promptTokens,
         outputTokens: result.usage?.completionTokens,
         processingTimeMs: processingTime,
         success: result.success,
-        inputData: { calEnabled: true, primaryModel: this.config.primaryModel.model },
+        inputData: { calEnabled: true, primaryModel: this.calConfig.primaryModel.model },
         outputData: { qualityScore, contentLength: result.content?.length },
         qualityScore
       });

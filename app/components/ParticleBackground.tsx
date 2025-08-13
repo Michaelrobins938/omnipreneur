@@ -1,21 +1,31 @@
 "use client"
 
-import { useEffect, useMemo } from 'react';
-import { Engine } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import type { ISourceOptions } from "@tsparticles/engine";
+import { useEffect, useMemo, useState } from 'react';
 
 export default function ParticleBackground() {
+  const [ReadyParticles, setReadyParticles] = useState<any>(null);
+
   useEffect(() => {
-    initParticlesEngine(async (engine: Engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      // Particles engine initialized - logging removed for production
-    });
+    let mounted = true;
+    (async () => {
+      try {
+        const dynImport = new Function('p', 'return import(p)');
+        const { initParticlesEngine } = await dynImport("@tsparticles/react");
+        await dynImport("@tsparticles/engine");
+        const { loadSlim } = await dynImport("@tsparticles/slim");
+        const ParticlesMod: any = await dynImport("@tsparticles/react");
+        await initParticlesEngine(async (engine: any) => {
+          await loadSlim(engine as any);
+        });
+        if (mounted) setReadyParticles(() => ParticlesMod.default || ParticlesMod);
+      } catch (e) {
+        console.warn('Particles libraries not available, skipping background.');
+      }
+    })();
+    return () => { mounted = false; };
   }, []);
 
-  const options: ISourceOptions = useMemo(() => ({
+  const options: any = useMemo(() => ({
     particles: {
       number: {
         value: 100,
@@ -101,11 +111,7 @@ export default function ParticleBackground() {
     detectRetina: true
   }), []);
 
-  return (
-    <Particles
-      id="tsparticles"
-      options={options}
-      className="absolute inset-0 -z-10"
-    />
-  );
+  if (!ReadyParticles) return null;
+  const Particles = ReadyParticles;
+  return <Particles id="tsparticles" options={options} className="absolute inset-0 -z-10" />;
 } 

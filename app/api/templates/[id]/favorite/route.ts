@@ -3,13 +3,9 @@ import { requireAuth } from '@/lib/auth';
 import { withRateLimit } from '@/lib/rate-limit';
 import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
+import { z } from 'zod';
 
-/**
- * POST /api/templates/[id]/favorite
- * 
- * Toggle favorite status of a template
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const postHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -45,7 +41,7 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
     }
 
     // Only allow favorites for templates the user owns or public templates
-    if (template.userId !== user.userId && !template.contextData?.isPublic) {
+    if (template.userId !== user.userId && !(template.contextData as any)?.isPublic) {
       return NextResponse.json(
         { 
           success: false, 
@@ -90,7 +86,7 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
         metadata: {
           templateId: id,
           title: template.title,
-          category: template.contextData?.category,
+          category: (template.contextData as any)?.category,
           timestamp: new Date().toISOString()
         }
       }
@@ -117,11 +113,14 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+};
+
+export const POST = requireAuth(withRateLimit(withCsrfProtection(postHandler as any), {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 favorites per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `template-favorite:${userId}:${ip}`;
-})));
+  limit: 30, // 30 favorites per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `template-favorite:${userId}:${ip}`;
+  }
+}));

@@ -11,7 +11,7 @@ export default function FinalCTA() {
   const prefersReducedMotion = useReducedMotion();
 
   const handleCTAClick = (type: 'final_start_free' | 'final_demo') => {
-    trackEvent(`cta_${type}`, { location: 'final_cta_section' });
+    trackEvent(`cta_${type}` as any, { location: 'final_cta_section' });
   };
 
   const urgencyIndicators = [

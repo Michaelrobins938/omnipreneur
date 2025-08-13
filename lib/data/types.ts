@@ -58,6 +58,9 @@ export type SiteConfig = {
     enabled: boolean;
     dismissible: boolean;
   };
+  // Optional fallbacks used in some components
+  urgencyText?: string;
+  proof?: { users: string; generated: string; success: string };
   socialProof: {
     userCount: string;
     contentGenerated: string;

@@ -11,6 +11,7 @@ import {
   BookOpen,
   Zap
 } from 'lucide-react';
+import { FaRocket, FaPlay } from 'react-icons/fa';
 import Link from 'next/link';
 import { Product } from '@/lib/data/types';
 import { getPricing } from '@/lib/data/pricing';
@@ -113,15 +114,21 @@ export default function ProductPageTemplate({ product, demoContent }: ProductPag
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <Link href="/auth/register">
+                <Link href={`/${product.id}/workspace`}>
                   <button className={`px-8 py-4 bg-gradient-to-r ${product.gradient[0]} ${product.gradient[1]} text-white rounded-full font-semibold text-lg hover:from-${product.gradient[0].replace('from-', '')}-600 hover:to-${product.gradient[1].replace('to-', '')}-600 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center space-x-2`}>
-                    <Zap className="w-5 h-5" />
-                    <span>Start Free</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <FaRocket className="w-5 h-5" />
+                    <span>Open Workspace</span>
                   </button>
                 </Link>
                 
-                {product.docsLink && (
+                {product.demoLink ? (
+                  <Link href={product.demoLink}>
+                    <button className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-blue-500 hover:text-blue-400 transition-all duration-300 flex items-center justify-center space-x-2">
+                      <FaPlay className="w-5 h-5" />
+                      <span>Try Demo</span>
+                    </button>
+                  </Link>
+                ) : product.docsLink && (
                   <Link href={product.docsLink}>
                     <button className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-blue-500 hover:text-blue-400 transition-all duration-300 flex items-center justify-center space-x-2">
                       <BookOpen className="w-5 h-5" />
@@ -357,15 +364,20 @@ export default function ProductPageTemplate({ product, demoContent }: ProductPag
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <Link href="/auth/register">
+                <Link href={`/${product.id}/workspace`}>
                   <button 
                     className={`px-8 py-4 bg-gradient-to-r ${product.gradient[0]} ${product.gradient[1]} text-white rounded-full font-semibold text-lg hover:opacity-90 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center space-x-2`}
                   >
-                    <Star className="w-5 h-5" />
-                    <span>Start Free Trial</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <FaRocket className="w-5 h-5" />
+                    <span>Open Workspace</span>
                   </button>
                 </Link>
+                <button 
+                  className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-blue-500 hover:text-blue-400 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Schedule Demo</span>
+                  <FaPlay className="w-5 h-5" />
+                </button>
               </div>
 
               {/* Risk Reversal */}

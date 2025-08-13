@@ -14,10 +14,10 @@ const RatingSchema = z.object({
  * 
  * Rate a content item (1-5 stars)
  */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const POST = requireAuth(withCsrfProtection(withRateLimit(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const { id } = (request as any).params;
     const body = await request.json();
 
     const { rating } = RatingSchema.parse(body);
@@ -105,9 +105,10 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 ratings per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-rate:${userId}:${ip}`;
+  limit: 20, // 20 ratings per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-rate:${userId}:${ip}`;
+  }
 })));

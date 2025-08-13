@@ -24,7 +24,7 @@ export default function UrgencyBanner({ onDismiss, isDismissed = false }: Urgenc
   };
 
   const handleCTAClick = () => {
-    trackEvent('cta_urgency_banner', { location: 'urgency_section' });
+    trackEvent('cta_urgency_banner' as any, { location: 'urgency_section' });
   };
 
   if (!isVisible) return null;

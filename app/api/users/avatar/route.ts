@@ -5,16 +5,7 @@ import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
 import { z } from 'zod';
 
-/**
- * POST /api/users/avatar
- * 
- * Upload user avatar image
- * Handles file upload, validation, and storage
- * 
- * Authentication: Required
- * Content-Type: multipart/form-data
- */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const postHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
     const formData = await request.formData();
@@ -72,7 +63,7 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
     // Update user avatar in database
     const updatedUser = await prisma.user.update({
       where: { id: user.userId },
-      data: { 
+      data: {
         avatar: avatarUrl,
         updatedAt: new Date()
       },
@@ -119,28 +110,16 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}), {
-  windowMs: 60 * 1000, // 1 minute
-  max: 5 // 5 uploads per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `avatar-upload:${userId}:${ip}`;
-}));
+};
 
-/**
- * DELETE /api/users/avatar
- * 
- * Remove user avatar
- */
-export const DELETE = requireAuth(async (request: NextRequest) => {
+const deleteHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
     // Remove avatar from database
     const updatedUser = await prisma.user.update({
       where: { id: user.userId },
-      data: { 
+      data: {
         avatar: null,
         updatedAt: new Date()
       },
@@ -179,9 +158,21 @@ export const DELETE = requireAuth(async (request: NextRequest) => {
         error: { 
           code: 'DELETE_ERROR', 
           message: 'Failed to remove avatar' 
-        } 
-      },
-      { status: 500 }
-    );
+          } 
+        },
+        { status: 500 }
+      );
+    }
+};
+
+export const POST = requireAuth(withCsrfProtection(withRateLimit(postHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 5, // 5 uploads per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `avatar-upload:${userId}:${ip}`;
   }
-});
+})));
+
+export const DELETE = requireAuth(deleteHandler as any);

@@ -11,7 +11,7 @@ export default function CaseSnapGrid() {
   const prefersReducedMotion = useReducedMotion();
 
   const handleCaseStudyClick = (caseId: number, caption: string) => {
-    trackEvent('case_study_click', { case_id: caseId, caption, location: 'case_snap_grid' });
+    trackEvent('case_study_click' as any, { case_id: caseId, caption, location: 'case_snap_grid' });
     window.location.href = '/case-studies';
   };
 

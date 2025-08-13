@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
-import { withRateLimit } from '@/lib/rate-limit';
+import { withRateLimit } from '@/lib/rate-limit/enhanced-rate-limit';
 import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
 import { z } from 'zod';
@@ -39,8 +39,8 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
       return {
         id: link.id,
         name: metadata?.name || 'Unnamed Link',
-        url: metadata?.url || `${process.env.NEXT_PUBLIC_APP_URL}?ref=${metadata?.affiliateCode}`,
-        shortUrl: metadata?.shortUrl || `omni.ai/r/${metadata?.affiliateCode}`,
+        url: metadata?.url || (metadata && typeof metadata === 'object' && 'affiliateCode' in metadata ? `${process.env.NEXT_PUBLIC_APP_URL}?ref=${(metadata as any).affiliateCode}` : `${process.env.NEXT_PUBLIC_APP_URL}?ref=ABC123`),
+        shortUrl: metadata?.shortUrl || (metadata && typeof metadata === 'object' && 'affiliateCode' in metadata ? `omni.ai/r/${(metadata as any).affiliateCode}` : 'omni.ai/r/ABC123'),
         clicks: metadata?.clicks || Math.floor(Math.random() * 500),
         conversions: metadata?.conversions || Math.floor(Math.random() * 20),
         earnings: metadata?.earnings || Math.floor(Math.random() * 1000),
@@ -94,11 +94,12 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 60 // 60 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `affiliate-links:${userId}:${ip}`;
+  max: 60, // 60 requests per minute
+  keyGenerator: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `affiliate-links:${userId}:${ip}`;
+  }
 }));
 
 /**
@@ -123,8 +124,8 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       }
     });
 
-    if (existingAffiliateEvent?.metadata?.affiliateCode) {
-      affiliateCode = existingAffiliateEvent.metadata.affiliateCode;
+    if (existingAffiliateEvent?.metadata && typeof existingAffiliateEvent.metadata === 'object' && 'affiliateCode' in existingAffiliateEvent.metadata && (existingAffiliateEvent.metadata as any).affiliateCode) {
+      affiliateCode = (existingAffiliateEvent.metadata as any).affiliateCode;
     }
 
     // Generate unique link ID
@@ -220,11 +221,12 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
       { status: 500 }
     );
   }
-}, {
+}), {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 link creations per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `affiliate-link-create:${userId}:${ip}`;
-})));
+  max: 20, // 20 link creations per minute
+  keyGenerator: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `affiliate-link-create:${userId}:${ip}`;
+  }
+}));

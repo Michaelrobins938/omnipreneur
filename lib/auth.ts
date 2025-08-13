@@ -55,10 +55,10 @@ export async function authenticateRequest(request: NextRequest): Promise<JWTPayl
 // Alias for consistency with content library usage
 export const verifyAuth = authenticateRequest;
 
-export type AuthedHandler = (request: NextRequest & { user?: JWTPayload }) => Promise<NextResponse> | NextResponse;
+export type AuthedHandler = (request: NextRequest & { user?: JWTPayload }, context?: any) => Promise<NextResponse> | NextResponse;
 
 export function requireAuth(handler: AuthedHandler) {
-  return async (request: NextRequest) => {
+  return async (request: NextRequest, context?: any) => {
     const payload = await authenticateRequest(request);
     
     if (!payload) {
@@ -70,13 +70,13 @@ export function requireAuth(handler: AuthedHandler) {
 
     // Add user info to request context (typed)
     (request as any).user = payload as JWTPayload;
-    return handler(request as NextRequest & { user: JWTPayload });
+    return handler(request as NextRequest & { user: JWTPayload }, context);
   };
 }
 
 export function requireRole(role: string) {
   return function(handler: AuthedHandler) {
-    return async (request: NextRequest) => {
+    return async (request: NextRequest, context?: any) => {
       const payload = await authenticateRequest(request);
       
       if (!payload) {
@@ -94,14 +94,14 @@ export function requireRole(role: string) {
       }
 
       (request as any).user = payload as JWTPayload;
-      return handler(request as NextRequest & { user: JWTPayload });
+      return handler(request as NextRequest & { user: JWTPayload }, context);
     };
   };
 }
 
 export function requireSubscription(plan: string) {
   return function(handler: AuthedHandler) {
-    return async (request: NextRequest) => {
+    return async (request: NextRequest, context?: any) => {
       const payload = await authenticateRequest(request);
       
       if (!payload) {
@@ -127,7 +127,7 @@ export function requireSubscription(plan: string) {
       }
 
       (request as any).user = payload as JWTPayload;
-      return handler(request as NextRequest & { user: JWTPayload });
+      return handler(request as NextRequest & { user: JWTPayload }, context);
     };
   };
-} 
+}

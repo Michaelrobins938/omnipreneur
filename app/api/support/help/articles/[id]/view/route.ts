@@ -3,19 +3,14 @@ import { withRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-/**
- * POST /api/support/help/articles/[id]/view
- * 
- * Track help article views for analytics
- */
-export const POST = withRateLimit(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const postHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const { id } = params;
     
     // Try to get authenticated user, but don't require it
     let userId: string | undefined;
     try {
-      const user = await requireAuth(request);
+      const user = await requireAuth(request as any);
       userId = (user as any)?.user?.userId;
     } catch {
       // Anonymous user - that's okay for view tracking
@@ -66,10 +61,13 @@ export const POST = withRateLimit(async (request: NextRequest, { params }: { par
       }
     });
   }
-}, {
+};
+
+export const POST = withRateLimit(postHandler as any, {
   windowMs: 60 * 1000, // 1 minute
-  max: 60 // 60 views per minute (generous for reading)
-}, (req: NextRequest) => {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `help-view:${ip}`;
+  limit: 60, // 60 views per minute (generous for reading)
+  key: (req: NextRequest) => {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `help-view:${ip}`;
+  }
 });

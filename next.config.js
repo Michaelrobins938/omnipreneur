@@ -8,7 +8,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react', 'framer-motion'],
   },
-  turbopack: {
+  turbo: {
     rules: {
       '*.svg': {
         loaders: ['@svgr/webpack'],

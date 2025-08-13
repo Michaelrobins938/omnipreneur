@@ -29,7 +29,6 @@ import {
   PieChart,
   LineChart,
   Smartphone,
-  Desktop,
   Tablet
 } from 'lucide-react';
 

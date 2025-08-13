@@ -20,8 +20,8 @@ interface PerformanceMetrics {
 }
 
 class PerformanceMonitor {
-  private redis: Redis | null = null;
-  private metrics: Map<string, PerformanceMetrics> = new Map();
+  public redis: Redis | null = null;
+  public metrics: Map<string, PerformanceMetrics> = new Map();
   
   constructor() {
     // Initialize Redis if available
@@ -73,7 +73,7 @@ class PerformanceMonitor {
     return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  private getClientIP(request: NextRequest): string {
+  public getClientIP(request: NextRequest): string {
     const forwarded = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
     const cfConnectingIp = request.headers.get('cf-connecting-ip');

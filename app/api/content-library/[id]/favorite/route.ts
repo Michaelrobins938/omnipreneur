@@ -9,10 +9,10 @@ import prisma from '@/lib/db';
  * 
  * Toggle favorite status of a content item
  */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const POST = requireAuth(withCsrfProtection(withRateLimit(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const { id } = (request as any).params;
 
     // Check if content item exists and belongs to user
     const contentItem = await prisma.contentLibraryItem.findFirst({
@@ -81,9 +81,10 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 favorites per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-favorite:${userId}:${ip}`;
+  limit: 30, // 30 favorites per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-favorite:${userId}:${ip}`;
+  }
 })));

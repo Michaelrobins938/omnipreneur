@@ -10,10 +10,11 @@ import { z } from 'zod';
  * 
  * Get a specific content library item
  */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = requireAuth(withRateLimit(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop() || '';
 
     const contentItem = await prisma.contentLibraryItem.findFirst({
       where: {
@@ -65,11 +66,12 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest, { para
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-item-get:${userId}:${ip}`;
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-item-get:${userId}:${ip}`;
+  }
 }));
 
 /**
@@ -77,10 +79,11 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest, { para
  * 
  * Update a content library item
  */
-export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const PUT = requireAuth(withCsrfProtection(withRateLimit(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop() || '';
     const body = await request.json();
 
     const UpdateSchema = z.object({
@@ -183,11 +186,12 @@ export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: 
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 updates per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-item-update:${userId}:${ip}`;
+  limit: 20, // 20 updates per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-item-update:${userId}:${ip}`;
+  }
 })));
 
 /**
@@ -195,10 +199,11 @@ export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: 
  * 
  * Delete a content library item
  */
-export const DELETE = requireAuth(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = requireAuth(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop() || '';
 
     // Check if content item exists and belongs to user
     const existingItem = await prisma.contentLibraryItem.findFirst({

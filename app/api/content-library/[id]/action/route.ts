@@ -14,10 +14,10 @@ const ActionSchema = z.object({
  * 
  * Track user actions on content items (view, copy, share, download)
  */
-export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const POST = requireAuth(withCsrfProtection(withRateLimit(async (request: NextRequest) => {
   try {
     const user = (request as any).user;
-    const { id } = params;
+    const { id } = (request as any).params;
     const body = await request.json();
 
     const { action } = ActionSchema.parse(body);
@@ -123,9 +123,10 @@ export const POST = requireAuth(withRateLimit(withCsrfProtection(async (request:
   }
 }, {
   windowMs: 60 * 1000, // 1 minute
-  max: 50 // 50 actions per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `content-action:${userId}:${ip}`;
+  limit: 50, // 50 actions per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `content-action:${userId}:${ip}`;
+  }
 })));

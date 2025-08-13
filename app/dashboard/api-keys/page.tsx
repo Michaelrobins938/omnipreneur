@@ -133,8 +133,9 @@ export default function ApiKeysPage() {
         
         setApiKeys(prev => [...prev, newKey]);
         setShowCreateModal(false);
-        setCreateForm({ name: '', description: '', scopes: ['read'] });
-        setNewKeyModal({ isOpen: true, key: newKey.key });
+        setCreateForm({ name: '', permissions: ['read'], expiresAt: '' });
+        // Removed undefined modal setter; show key by revealing it
+        setRevealedKeys(prev => new Set([...prev, newKey.id]));
       } else {
         const errorData = await response.json();
         alert(errorData.error?.message || 'Failed to create API key');

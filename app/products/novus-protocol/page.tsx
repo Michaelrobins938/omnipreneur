@@ -478,6 +478,19 @@ export default function NOVUSProtocol() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="max-w-md mx-auto"
           >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+              <Link href={`/auth/signin?callbackUrl=${encodeURIComponent('/novus/workspace')}`}>
+                <motion.button
+                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span>Open NOVUS Workspace</span>
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </Link>
+            </div>
+            
             <CheckoutButton
               productName="NOVUS Protocol"
               productId="novus-protocol"

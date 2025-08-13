@@ -42,6 +42,7 @@ import {
   AlertCircle,
   Rocket
 } from 'lucide-react';
+import { FaRocket, FaPlay } from 'react-icons/fa';
 
 export default function ContentSpawner() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -312,25 +313,25 @@ export default function ContentSpawner() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <Link href="/products/content-spawner/demo">
+              <Link href="/content-spawner/workspace">
                 <motion.button
                   className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full font-semibold text-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-lg hover:shadow-orange-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Play className="w-5 h-5" />
-                  Try Content Spawner
-                  <ArrowRight className="w-5 h-5" />
+                  <FaRocket className="w-5 h-5" />
+                  <span>Open Workspace</span>
                 </motion.button>
               </Link>
 
-              <Link href="/products/content-spawner/docs">
+              <Link href="/products/content-spawner/demo">
                 <motion.button
-                  className="px-8 py-4 border border-zinc-700 text-zinc-300 rounded-full font-semibold text-lg hover:border-zinc-600 hover:text-zinc-200 transition-all duration-300"
+                  className="px-8 py-4 border border-zinc-700 text-zinc-300 rounded-full font-semibold text-lg hover:border-zinc-600 hover:text-zinc-200 transition-all duration-300 flex items-center justify-center space-x-2"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  View Documentation
+                  <FaPlay className="w-5 h-5" />
+                  <span>Try Demo</span>
                 </motion.button>
               </Link>
             </motion.div>
@@ -715,25 +716,26 @@ export default function ContentSpawner() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="max-w-md mx-auto"
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <CheckoutButton
-              productName="Content Spawner"
-              productId="content-spawner"
-              price={{
-                monthly: 299,
-                yearly: 2990
-              }}
-              features={[
-                "AI-powered viral content",
-                "Trend analysis & optimization",
-                "Multi-platform generation",
-                "Performance analytics",
-                "Advanced targeting",
-                "Priority support"
-              ]}
-              variant="secondary"
-            />
+            <Link href="/content-spawner/workspace">
+              <motion.button
+                className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full font-semibold text-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-lg hover:shadow-orange-500/25 transform hover:scale-105 flex items-center justify-center space-x-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaRocket className="w-5 h-5" />
+                <span>Open Workspace</span>
+              </motion.button>
+            </Link>
+            <motion.button
+              className="px-8 py-4 border-2 border-zinc-600 text-zinc-300 rounded-full font-semibold text-lg hover:border-orange-500 hover:text-orange-400 transition-all duration-300 flex items-center justify-center space-x-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Schedule Demo</span>
+              <FaPlay className="w-5 h-5" />
+            </motion.button>
           </motion.div>
         </div>
       </section>

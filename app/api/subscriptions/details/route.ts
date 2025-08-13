@@ -6,18 +6,10 @@ import prisma from '@/lib/db';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env['STRIPE_SECRET_KEY'] || '', {
-  apiVersion: '2025-06-30.basil',
+  apiVersion: '2023-10-16',
 });
 
-/**
- * GET /api/subscriptions/details
- * 
- * Get comprehensive subscription details including current plan,
- * usage, billing info, and available plans
- * 
- * Authentication: Required
- */
-export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   try {
     const user = (request as any).user;
 
@@ -82,7 +74,7 @@ export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: 
 
     const featuresUsed = Array.from(new Set(
       featureUsage
-        .map(event => event.metadata?.toolName)
+        .map(event => (event.metadata && typeof event.metadata === 'object' && 'toolName' in event.metadata) ? (event.metadata as any).toolName : null)
         .filter(Boolean)
     ));
 
@@ -173,13 +165,18 @@ export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: 
           customer: userData.subscription.stripeId,
           type: 'card'
         });
+        
+        // Get customer to find default payment method
+        const customer = await stripe.customers.retrieve(userData.subscription.stripeId) as any;
+        const defaultPaymentMethodId = customer.invoice_settings?.default_payment_method;
+        
         paymentMethods = methods.data.map(method => ({
           id: method.id,
           brand: method.card?.brand,
           last4: method.card?.last4,
           exp_month: method.card?.exp_month,
           exp_year: method.card?.exp_year,
-          default: method.id === userData.subscription?.defaultPaymentMethod
+          default: method.id === defaultPaymentMethodId
         }));
       } catch (error) {
         console.log('Error fetching payment methods:', error);
@@ -200,13 +197,13 @@ export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: 
         currentPeriodStart: userData.subscription.currentPeriodStart?.toISOString(),
         currentPeriodEnd: userData.subscription.currentPeriodEnd?.toISOString(),
         cancelAtPeriodEnd: userData.subscription.cancelAtPeriodEnd,
-        billingCycle: userData.subscription.billingCycle || 'monthly',
-        trialEndsAt: userData.subscription.trialEndsAt?.toISOString(),
+        billingCycle: 'monthly', // Default to monthly, could be enhanced to detect from Stripe
+        trialEndsAt: null, // Not stored in our database, could be fetched from Stripe
         lastPayment: userData.payments[0]?.amount,
         nextPayment: upcomingInvoice?.amount
       } : null,
       usage: {
-        aiCreditsUsed: userData.usage?.aiCreditsUsed || currentPeriodUsage,
+        aiCreditsUsed: userData.usage?.aiRequestsUsed || currentPeriodUsage,
         aiCreditsLimit: plans[userData.subscription?.plan as keyof typeof plans]?.limits.aiCredits || plans.FREE.limits.aiCredits,
         featuresUsed: featuresUsed as string[],
         currentBillingPeriodUsage: currentPeriodUsage
@@ -243,11 +240,14 @@ export const GET = requireAuth(withRateLimit(withCsrfProtection(async (request: 
       { status: 500 }
     );
   }
-}), {
+};
+
+export const GET = requireAuth(withRateLimit(withCsrfProtection(getHandler as any), {
   windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `subscription-details:${userId}:${ip}`;
+  limit: 20, // 20 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `subscription-details:${userId}:${ip}`;
+  }
 }));

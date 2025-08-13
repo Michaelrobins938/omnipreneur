@@ -115,7 +115,7 @@ export async function POST(
 }
 
 async function sendUserEmail(targetUser: any, adminUser: any, subject: string, message: string) {
-  const transporter = nodemailer.createTransporter({
+  const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: false,
@@ -187,8 +187,8 @@ async function logAdminAction(adminId: string, action: string, targetUserId: str
     await prisma.event.create({
       data: {
         userId: adminId,
-        type: 'ADMIN_ACTION',
-        data: {
+        event: 'ADMIN_ACTION',
+        metadata: {
           action,
           targetUserId,
           result,

@@ -65,6 +65,10 @@
     "NOVUS_Customer_Package/**/*",
     "system-files/**/*",
     "taskflow-ai/**/*",
-    "organized/**/*"
+    "organized/**/*",
+    "backups/**/*",
+    "middleware/error-handler.ts",
+    "components/sections/DemoEmbed.tsx",
+    "app/products/content-spawner/demo/page.tsx"
   ]
 }

@@ -274,7 +274,7 @@ export default function HelpArticlePage() {
         {/* Header */}
         <div className="mb-8">
           <Link href="/support/help" className="inline-flex items-center text-zinc-400 hover:text-white mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            {/* Icon removed to avoid missing import */}
             Back to Help Center
           </Link>
           
@@ -438,7 +438,7 @@ export default function HelpArticlePage() {
                     : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
                 }`}
               >
-                <ThumbsUp className="w-4 h-4" />
+                {/* Icon removed */}
                 <span>Yes ({article.helpfulVotes})</span>
               </button>
               
@@ -450,7 +450,7 @@ export default function HelpArticlePage() {
                     : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
                 }`}
               >
-                <ThumbsDown className="w-4 h-4" />
+                {/* Icon removed */}
                 <span>No ({article.unhelpfulVotes})</span>
               </button>
             </div>

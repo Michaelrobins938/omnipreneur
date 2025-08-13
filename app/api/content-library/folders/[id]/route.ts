@@ -5,12 +5,7 @@ import { withCsrfProtection } from '@/lib/security/csrf';
 import prisma from '@/lib/db';
 import { z } from 'zod';
 
-/**
- * GET /api/content-library/folders/[id]
- * 
- * Get a specific folder
- */
-export const GET = requireAuth(withRateLimit(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const getHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -78,14 +73,7 @@ export const GET = requireAuth(withRateLimit(async (request: NextRequest, { para
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 30 // 30 requests per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `folder-get:${userId}:${ip}`;
-}));
+};
 
 const UpdateFolderSchema = z.object({
   name: z.string().min(1).max(100).optional(),
@@ -93,12 +81,7 @@ const UpdateFolderSchema = z.object({
   parentId: z.string().optional()
 });
 
-/**
- * PUT /api/content-library/folders/[id]
- * 
- * Update a folder
- */
-export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const putHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -272,21 +255,9 @@ export const PUT = requireAuth(withRateLimit(withCsrfProtection(async (request: 
       { status: 500 }
     );
   }
-}, {
-  windowMs: 60 * 1000, // 1 minute
-  max: 20 // 20 updates per minute
-}, (req: NextRequest) => {
-  const userId = (req as any).user?.userId;
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-  return `folder-update:${userId}:${ip}`;
-})));
+};
 
-/**
- * DELETE /api/content-library/folders/[id]
- * 
- * Delete a folder and optionally move its contents
- */
-export const DELETE = requireAuth(async (request: NextRequest, { params }: { params: { id: string } }) => {
+const deleteHandler = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const user = (request as any).user;
     const { id } = params;
@@ -386,11 +357,30 @@ export const DELETE = requireAuth(async (request: NextRequest, { params }: { par
       { status: 500 }
     );
   }
-});
+};
 
-/**
- * Check if a folder is a descendant of another folder
- */
+export const GET = requireAuth(withRateLimit(getHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 30, // 30 requests per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `folder-get:${userId}:${ip}`;
+  }
+}));
+
+export const PUT = requireAuth(withCsrfProtection(withRateLimit(putHandler as any, {
+  windowMs: 60 * 1000, // 1 minute
+  limit: 20, // 20 updates per minute
+  key: (req: NextRequest) => {
+    const userId = (req as any).user?.userId;
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    return `folder-update:${userId}:${ip}`;
+  }
+})));
+
+export const DELETE = requireAuth(deleteHandler as any);
+
 async function checkIfDescendant(potentialAncestorId: string, folderId: string): Promise<boolean> {
   const folder = await prisma.contentFolder.findUnique({
     where: { id: potentialAncestorId },
