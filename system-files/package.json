@@ -1,0 +1,19 @@
+{
+  "name": "system-files",
+  "version": "1.0.0",
+  "description": "System Files - Core configuration and automation files",
+  "main": "index.tsx",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "serve": "npx serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {},
+  "keywords": ["omnipreneur", "system", "files", "automation"],
+  "author": "Omnipreneur Team",
+  "license": "MIT"
+} 

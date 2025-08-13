@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run type-check:*)"
+    ],
+    "deny": []
+  }
+}

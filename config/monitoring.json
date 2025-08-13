@@ -1,0 +1,18 @@
+{
+  "environment": "production",
+  "metrics": {
+    "enabled": true,
+    "interval": 30000,
+    "endpoints": [
+      "/api/health",
+      "/api/metrics"
+    ]
+  },
+  "alerts": {
+    "enabled": true,
+    "thresholds": {
+      "errorRate": 0.05,
+      "responseTime": 2000
+    }
+  }
+}

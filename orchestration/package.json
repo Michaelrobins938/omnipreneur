@@ -1,0 +1,19 @@
+{
+  "name": "orchestration",
+  "version": "1.0.0",
+  "description": "Orchestration - Workflow automation and system integration",
+  "main": "index.tsx",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "serve": "npx serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {},
+  "keywords": ["omnipreneur", "orchestration", "automation", "workflow"],
+  "author": "Omnipreneur Team",
+  "license": "MIT"
+} 

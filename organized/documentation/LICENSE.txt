@@ -1,0 +1,51 @@
+BONUS PROMPT PACK V1 - COMMERCIAL LICENSE
+
+Copyright (c) 2024 NOVUS System. All rights reserved.
+
+This license grants you, the purchaser, a single-user commercial license to use the BONUS PROMPT PACK V1 ("the Product") subject to the following terms and conditions:
+
+GRANT OF LICENSE
+You are granted a non-exclusive, non-transferable license to use the Product for:
+- Personal use and projects
+- Business operations and client work
+- Modification and customization for your own use
+- Integration into your own products and services
+
+PERMITTED USES
+✅ Single-user commercial use
+✅ Personal and business projects
+✅ Client work and customer projects
+✅ Modification and customization
+✅ Integration into your own products
+✅ Unlimited use within your organization
+
+RESTRICTIONS
+❌ No resale or redistribution of the Product
+❌ No sharing with other users or organizations
+❌ No public posting or distribution
+❌ No sublicensing or transfer of rights
+❌ No reverse engineering or decompilation
+❌ No use in competing products or services
+
+OWNERSHIP
+The Product remains the exclusive property of NOVUS System. This license does not transfer ownership of the Product or any intellectual property rights.
+
+TERMINATION
+This license terminates automatically if you fail to comply with any of its terms and conditions. Upon termination, you must cease all use of the Product and destroy all copies.
+
+DISCLAIMER
+THE PRODUCT IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+LIMITATION OF LIABILITY
+IN NO EVENT SHALL NOVUS SYSTEM BE LIABLE FOR ANY DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PRODUCT.
+
+GOVERNING LAW
+This license is governed by the laws of the jurisdiction in which NOVUS System operates.
+
+CONTACT
+For questions about this license, contact: support@novus-system.com
+
+By using the Product, you agree to be bound by the terms of this license.
+
+Version: 1.0
+Effective Date: 2024 

@@ -1,0 +1,42 @@
+NOVUS AI Prompt Optimization Agent - License Agreement
+
+Copyright (c) 2024 NOVUS AI
+
+LICENSE TERMS:
+
+1. GRANT OF LICENSE
+This license grants you the right to use NOVUS AI Prompt Optimization Agent for personal and commercial purposes.
+
+2. PERMITTED USES
+- Use NOVUS for your own prompt optimization needs
+- Implement NOVUS in your business workflows
+- Modify NOVUS for your specific requirements
+- Distribute NOVUS within your organization
+
+3. RESTRICTIONS
+- You may not resell NOVUS as a standalone product
+- You may not claim ownership of the NOVUS methodology
+- You may not reverse engineer the core algorithms
+- You may not use NOVUS for illegal or harmful purposes
+
+4. INTELLECTUAL PROPERTY
+The 4-D methodology, prompt optimization techniques, and NOVUS framework remain the property of the original creators.
+
+5. WARRANTY
+NOVUS is provided "as is" without warranty of any kind. Use at your own risk.
+
+6. LIABILITY
+The creators of NOVUS are not liable for any damages arising from the use of this tool.
+
+7. TERMINATION
+This license terminates automatically if you fail to comply with its terms.
+
+8. GOVERNING LAW
+This license is governed by the laws of the jurisdiction where the product was purchased.
+
+For questions about this license, contact: support@novus-ai.com
+
+---
+
+NOVUS AI Prompt Optimization Agent v1.0
+Transform vague ideas into tactical weapons with AI. 

@@ -1,0 +1,98 @@
+{
+  "TypeScript": {
+    "status": "✅ Working",
+    "version": "Version 5.9.2"
+  },
+  "ESLint": {
+    "status": "✅ Working",
+    "version": "v9.32.0"
+  },
+  "Prettier": {
+    "status": "✅ Working",
+    "version": "3.6.2"
+  },
+  "Jest": {
+    "status": "✅ Working",
+    "version": "29.7.0"
+  },
+  "Cypress": {
+    "status": "✅ Working",
+    "version": "Cypress package version: 14.5.3\nCypress binary version: 14.5.3\nElectron version: 33.2.1\nBundled Node version: \r\n20.18.1"
+  },
+  "TypeScript Language Server": {
+    "status": "✅ Working",
+    "version": "4.3.4"
+  },
+  "Lighthouse": {
+    "status": "✅ Working",
+    "version": "12.8.1"
+  },
+  "Pa11y": {
+    "status": "✅ Working",
+    "version": "9.0.0"
+  },
+  "Snyk": {
+    "status": "✅ Working",
+    "version": "1.1298.2"
+  },
+  "Artillery": {
+    "status": "❌ Failed",
+    "error": "Command failed: artillery --version\n'artillery' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "Axe-core": {
+    "status": "❌ Failed",
+    "error": "Command failed: axe-core --version\n'axe-core' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "SonarQube Scanner": {
+    "status": "✅ Working",
+    "version": "4.3.0"
+  },
+  "Filesystem MCP": {
+    "status": "❌ Failed",
+    "error": "Command failed: npx @modelcontextprotocol/server-filesystem --version\nError accessing directory --version: Error: ENOENT: no such file or directory, stat 'C:\\Users\\Micha\\Favorites\\Downloads\\omnipreneur\\--version'\n    at async Object.stat (node:internal/fs/promises:1032:18)\n    at async file:///C:/Users/Micha/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js:53:23\n    at async Promise.all (index 0)\n    at async file:///C:/Users/Micha/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js:51:1 {\n  errno: -4058,\n  code: 'ENOENT',\n  syscall: 'stat',\n  path: 'C:\\\\Users\\\\Micha\\\\Favorites\\\\Downloads\\\\omnipreneur\\\\--version'\n}\n"
+  },
+  "Sequential Thinking MCP": {
+    "status": "✅ Working",
+    "version": ""
+  },
+  "Code Runner MCP": {
+    "status": "✅ Working",
+    "version": "0.1.7"
+  },
+  "Notion MCP": {
+    "status": "✅ Working",
+    "version": ""
+  },
+  "Heroku MCP": {
+    "status": "✅ Working",
+    "version": ""
+  },
+  "Sentry MCP": {
+    "status": "✅ Working",
+    "version": "@sentry/mcp-server 0.17.1"
+  },
+  "Git": {
+    "status": "✅ Working",
+    "version": "git version 2.50.0.windows.2"
+  },
+  "npm": {
+    "status": "✅ Working",
+    "version": "10.8.2"
+  },
+  "Vercel": {
+    "status": "✅ Working",
+    "version": "44.6.6"
+  },
+  "Docker": {
+    "status": "❌ Failed",
+    "error": "Command failed: docker --version\n'docker' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "PostgreSQL": {
+    "status": "❌ Failed",
+    "error": "Command failed: psql --version\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "Redis": {
+    "status": "❌ Failed",
+    "error": "Command failed: redis-cli --version\n'redis-cli' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": false,
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "target": "ES2017",
+    "noImplicitAny": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next/**/*",
+    "BONUS_PROMPT_PACK_V1/**/*",
+    "auto_rewrite_engine_project/**/*",
+    "auto-niche-engine/**/*",
+    "affiliate_portal_complete/**/*",
+    "content_spawner_complete/**/*",
+    "bundle_builder_complete/**/*",
+    "live-dashboard/**/*",
+    "live-dashboard-app/**/*",
+    "bundle-builder/**/*",
+    "landing-page/**/*",
+    "orchestration/**/*",
+    "omnipreneur_prompt_pack/**/*",
+    "notion_log_template/**/*",
+    "NOVUS_Launch_Bundle/**/*",
+    "NOVUS_Customer_Package/**/*",
+    "system-files/**/*",
+    "taskflow-ai/**/*",
+    "organized/**/*"
+  ]
+}

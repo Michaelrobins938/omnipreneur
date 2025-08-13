@@ -1,0 +1,820 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "--stdio"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking", "--stdio"],
+      "env": {}
+    },
+    "code-runner": {
+      "command": "npx",
+      "args": ["mcp-server-code-runner", "--stdio"],
+      "env": {}
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["@notionhq/notion-mcp-server", "--stdio"],
+      "env": {
+        "NOTION_TOKEN": "${NOTION_TOKEN}"
+      }
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["@sentry/mcp-server", "--stdio"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}",
+        "SENTRY_ORG": "${SENTRY_ORG}",
+        "SENTRY_PROJECT": "${SENTRY_PROJECT}"
+      }
+    },
+    "heroku": {
+      "command": "npx",
+      "args": ["@heroku/mcp-server", "--stdio"],
+      "env": {
+        "HEROKU_API_KEY": "${HEROKU_API_KEY}"
+      }
+    },
+    "typescript": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "env": {}
+    },
+    "eslint": {
+      "command": "eslint",
+      "args": ["--stdin", "--format=json"],
+      "env": {}
+    },
+    "prettier": {
+      "command": "prettier",
+      "args": ["--stdin-filepath", "temp.ts"],
+      "env": {}
+    },
+    "jest": {
+      "command": "jest",
+      "args": ["--json", "--silent"],
+      "env": {}
+    },
+    "cypress": {
+      "command": "cypress",
+      "args": ["run", "--headless"],
+      "env": {}
+    },
+    "git": {
+      "command": "git",
+      "args": ["status"],
+      "env": {}
+    },
+    "npm": {
+      "command": "npm",
+      "args": ["list", "--depth=0"],
+      "env": {}
+    },
+    "vercel": {
+      "command": "vercel",
+      "args": ["--version"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "openai": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.openai.com/v1/chat/completions"],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      }
+    },
+    "github": {
+      "command": "gh",
+      "args": ["api", "user"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "stripe": {
+      "command": "stripe",
+      "args": ["version"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      }
+    },
+    "postgres": {
+      "command": "psql",
+      "args": ["-h", "localhost", "-U", "postgres", "-d", "omnipreneur"],
+      "env": {
+        "PGPASSWORD": "${PGPASSWORD}"
+      }
+    },
+    "redis": {
+      "command": "redis-cli",
+      "args": ["ping"],
+      "env": {}
+    },
+    "docker": {
+      "command": "docker",
+      "args": ["ps"],
+      "env": {}
+    },
+    "aws": {
+      "command": "aws",
+      "args": ["sts", "get-caller-identity"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}",
+        "AWS_DEFAULT_REGION": "${AWS_DEFAULT_REGION}"
+      }
+    },
+    "figma": {
+      "command": "curl",
+      "args": ["-H", "X-Figma-Token: ${FIGMA_ACCESS_TOKEN}", "https://api.figma.com/v1/me"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}"
+      }
+    },
+    "analytics": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.vercel.com/v1/analytics"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "monitoring": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.sentry.io/api/0/projects/"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+    "testing": {
+      "command": "npm",
+      "args": ["test"],
+      "env": {}
+    },
+    "build": {
+      "command": "npm",
+      "args": ["run", "build"],
+      "env": {}
+    },
+    "deploy": {
+      "command": "vercel",
+      "args": ["--prod"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "lint": {
+      "command": "npm",
+      "args": ["run", "lint"],
+      "env": {}
+    },
+    "format": {
+      "command": "npm",
+      "args": ["run", "format"],
+      "env": {}
+    },
+    "type-check": {
+      "command": "npm",
+      "args": ["run", "type-check"],
+      "env": {}
+    },
+    "security": {
+      "command": "npm",
+      "args": ["audit"],
+      "env": {}
+    },
+    "performance": {
+      "command": "lighthouse",
+      "args": ["--output=json", "--chrome-flags=--headless"],
+      "env": {}
+    },
+    "accessibility": {
+      "command": "pa11y",
+      "args": ["--json"],
+      "env": {}
+    },
+    "seo": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"],
+      "env": {
+        "GOOGLE_PAGESPEED_API_KEY": "${GOOGLE_PAGESPEED_API_KEY}"
+      }
+    },
+    "database": {
+      "command": "npx",
+      "args": ["prisma", "db", "push"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "migration": {
+      "command": "npx",
+      "args": ["prisma", "migrate", "deploy"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "seed": {
+      "command": "npx",
+      "args": ["prisma", "db", "seed"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "backup": {
+      "command": "pg_dump",
+      "args": ["-h", "localhost", "-U", "postgres", "-d", "omnipreneur"],
+      "env": {
+        "PGPASSWORD": "${PGPASSWORD}"
+      }
+    },
+    "restore": {
+      "command": "psql",
+      "args": ["-h", "localhost", "-U", "postgres", "-d", "omnipreneur"],
+      "env": {
+        "PGPASSWORD": "${PGPASSWORD}"
+      }
+    },
+    "email": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.resend.com/emails"],
+      "env": {
+        "RESEND_API_KEY": "${RESEND_API_KEY}"
+      }
+    },
+    "payment": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.stripe.com/v1/payment_intents"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      }
+    },
+    "webhook": {
+      "command": "stripe",
+      "args": ["listen", "--forward-to", "localhost:3000/api/webhooks/stripe"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      }
+    },
+    "cron": {
+      "command": "node",
+      "args": ["scripts/cron.js"],
+      "env": {}
+    },
+    "backup-s3": {
+      "command": "aws",
+      "args": ["s3", "sync", "./backups", "s3://omnipreneur-backups"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}",
+        "AWS_DEFAULT_REGION": "${AWS_DEFAULT_REGION}"
+      }
+    },
+    "cdn": {
+      "command": "aws",
+      "args": ["cloudfront", "create-invalidation", "--distribution-id", "${CLOUDFRONT_DISTRIBUTION_ID}"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}",
+        "AWS_DEFAULT_REGION": "${AWS_DEFAULT_REGION}"
+      }
+    },
+    "ssl": {
+      "command": "certbot",
+      "args": ["renew"],
+      "env": {}
+    },
+    "monitoring-setup": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.sentry.io/api/0/projects/"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+    "analytics-setup": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.vercel.com/v1/analytics"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "ci-cd": {
+      "command": "gh",
+      "args": ["api", "repos/:owner/:repo/actions/workflows"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "deployment-status": {
+      "command": "vercel",
+      "args": ["ls"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "performance-monitoring": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.sentry.io/api/0/projects/:org/:project/events/"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+    "error-tracking": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.sentry.io/api/0/projects/:org/:project/issues/"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+    "user-analytics": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.vercel.com/v1/analytics/views"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "conversion-tracking": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.vercel.com/v1/analytics/conversions"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "a-b-testing": {
+      "command": "curl",
+      "args": ["-X", "POST", "https://api.vercel.com/v1/edge-config"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "personalization": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://api.vercel.com/v1/edge-config"],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
+    },
+    "seo-monitoring": {
+      "command": "curl",
+      "args": ["-X", "GET", "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"],
+      "env": {
+        "GOOGLE_PAGESPEED_API_KEY": "${GOOGLE_PAGESPEED_API_KEY}"
+      }
+    },
+    "security-scan": {
+      "command": "npm",
+      "args": ["audit", "--audit-level=moderate"],
+      "env": {}
+    },
+    "vulnerability-check": {
+      "command": "snyk",
+      "args": ["test"],
+      "env": {
+        "SNYK_TOKEN": "${SNYK_TOKEN}"
+      }
+    },
+    "compliance-check": {
+      "command": "pa11y",
+      "args": ["--standard", "WCAG2AA"],
+      "env": {}
+    },
+    "load-testing": {
+      "command": "artillery",
+      "args": ["run", "load-tests.yml"],
+      "env": {}
+    },
+    "stress-testing": {
+      "command": "k6",
+      "args": ["run", "stress-test.js"],
+      "env": {}
+    },
+    "penetration-testing": {
+      "command": "zap-baseline",
+      "args": ["-t", "https://omnipreneur.vercel.app"],
+      "env": {}
+    },
+    "code-quality": {
+      "command": "sonarqube-scanner",
+      "args": ["-Dsonar.projectKey=omnipreneur"],
+      "env": {
+        "SONAR_TOKEN": "${SONAR_TOKEN}"
+      }
+    },
+    "dependency-check": {
+      "command": "npm",
+      "args": ["outdated"],
+      "env": {}
+    },
+    "bundle-analysis": {
+      "command": "npm",
+      "args": ["run", "analyze"],
+      "env": {}
+    },
+    "coverage-report": {
+      "command": "npm",
+      "args": ["run", "test:coverage"],
+      "env": {}
+    },
+    "performance-budget": {
+      "command": "lighthouse",
+      "args": ["--output=json", "--chrome-flags=--headless", "--budget-path=budget.json"],
+      "env": {}
+    },
+    "accessibility-audit": {
+      "command": "axe-core",
+      "args": ["--json"],
+      "env": {}
+    },
+    "seo-audit": {
+      "command": "lighthouse",
+      "args": ["--output=json", "--chrome-flags=--headless", "--only-categories=seo"],
+      "env": {}
+    },
+    "best-practices": {
+      "command": "lighthouse",
+      "args": ["--output=json", "--chrome-flags=--headless", "--only-categories=best-practices"],
+      "env": {}
+    },
+    "progressive-web-app": {
+      "command": "lighthouse",
+      "args": ["--output=json", "--chrome-flags=--headless", "--only-categories=pwa"],
+      "env": {}
+    }
+  },
+  "settings": {
+    "defaultTimeout": 30000,
+    "maxConcurrentRequests": 5,
+    "retryAttempts": 3,
+    "logLevel": "info",
+    "enableTelemetry": false,
+    "autoUpdate": true,
+    "backupEnabled": true,
+    "monitoringEnabled": true,
+    "analyticsEnabled": true,
+    "securityEnabled": true,
+    "performanceEnabled": true,
+    "accessibilityEnabled": true,
+    "seoEnabled": true,
+    "testingEnabled": true,
+    "deploymentEnabled": true,
+    "databaseEnabled": true,
+    "paymentEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "cronEnabled": true,
+    "backupEnabled": true,
+    "cdnEnabled": true,
+    "sslEnabled": true,
+    "ciCdEnabled": true,
+    "personalizationEnabled": true,
+    "abTestingEnabled": true,
+    "conversionTrackingEnabled": true,
+    "userAnalyticsEnabled": true,
+    "errorTrackingEnabled": true,
+    "performanceMonitoringEnabled": true,
+    "securityScanningEnabled": true,
+    "vulnerabilityCheckingEnabled": true,
+    "complianceCheckingEnabled": true,
+    "loadTestingEnabled": true,
+    "stressTestingEnabled": true,
+    "penetrationTestingEnabled": true,
+    "codeQualityEnabled": true,
+    "dependencyCheckingEnabled": true,
+    "bundleAnalysisEnabled": true,
+    "coverageReportingEnabled": true,
+    "performanceBudgetEnabled": true,
+    "accessibilityAuditEnabled": true,
+    "seoAuditEnabled": true,
+    "bestPracticesEnabled": true,
+    "progressiveWebAppEnabled": true
+  },
+  "workflows": {
+    "development": [
+      "typescript",
+      "eslint",
+      "prettier",
+      "jest",
+      "cypress",
+      "git",
+      "npm"
+    ],
+    "testing": [
+      "jest",
+      "cypress",
+      "coverage-report",
+      "accessibility-audit",
+      "security-scan"
+    ],
+    "deployment": [
+      "build",
+      "test",
+      "lint",
+      "security-scan",
+      "deploy",
+      "monitoring-setup",
+      "analytics-setup"
+    ],
+    "monitoring": [
+      "performance-monitoring",
+      "error-tracking",
+      "user-analytics",
+      "conversion-tracking"
+    ],
+    "maintenance": [
+      "dependency-check",
+      "security-scan",
+      "vulnerability-check",
+      "backup",
+      "ssl"
+    ],
+    "optimization": [
+      "performance-budget",
+      "bundle-analysis",
+      "seo-audit",
+      "best-practices",
+      "progressive-web-app"
+    ],
+    "compliance": [
+      "compliance-check",
+      "accessibility-audit",
+      "security-scan",
+      "vulnerability-check"
+    ],
+    "quality": [
+      "code-quality",
+      "coverage-report",
+      "lint",
+      "type-check",
+      "format"
+    ]
+  },
+  "integrations": {
+    "github": {
+      "enabled": true,
+      "token": "${GITHUB_TOKEN}",
+      "webhook": true,
+      "actions": true
+    },
+    "vercel": {
+      "enabled": true,
+      "token": "${VERCEL_TOKEN}",
+      "analytics": true,
+      "edge": true
+    },
+    "stripe": {
+      "enabled": true,
+      "secretKey": "${STRIPE_SECRET_KEY}",
+      "webhook": true,
+      "payment": true
+    },
+    "sentry": {
+      "enabled": true,
+      "authToken": "${SENTRY_AUTH_TOKEN}",
+      "monitoring": true,
+      "errorTracking": true
+    },
+    "notion": {
+      "enabled": true,
+      "token": "${NOTION_TOKEN}",
+      "database": true,
+      "pages": true
+    },
+    "heroku": {
+      "enabled": true,
+      "apiKey": "${HEROKU_API_KEY}",
+      "deployment": true,
+      "monitoring": true
+    },
+    "aws": {
+      "enabled": true,
+      "accessKeyId": "${AWS_ACCESS_KEY_ID}",
+      "secretAccessKey": "${AWS_SECRET_ACCESS_KEY}",
+      "region": "${AWS_DEFAULT_REGION}",
+      "s3": true,
+      "cloudfront": true
+    },
+    "openai": {
+      "enabled": true,
+      "apiKey": "${OPENAI_API_KEY}",
+      "completions": true,
+      "embeddings": true
+    },
+    "figma": {
+      "enabled": true,
+      "accessToken": "${FIGMA_ACCESS_TOKEN}",
+      "design": true,
+      "assets": true
+    },
+    "resend": {
+      "enabled": true,
+      "apiKey": "${RESEND_API_KEY}",
+      "email": true,
+      "templates": true
+    },
+    "postgres": {
+      "enabled": true,
+      "url": "${DATABASE_URL}",
+      "migration": true,
+      "backup": true
+    },
+    "redis": {
+      "enabled": true,
+      "url": "${REDIS_URL}",
+      "cache": true,
+      "session": true
+    }
+  },
+  "environment": {
+    "development": {
+      "NODE_ENV": "development",
+      "DEBUG": true,
+      "LOG_LEVEL": "debug"
+    },
+    "staging": {
+      "NODE_ENV": "staging",
+      "DEBUG": false,
+      "LOG_LEVEL": "info"
+    },
+    "production": {
+      "NODE_ENV": "production",
+      "DEBUG": false,
+      "LOG_LEVEL": "warn"
+    }
+  },
+  "security": {
+    "encryption": {
+      "enabled": true,
+      "algorithm": "AES-256-GCM",
+      "keyRotation": true
+    },
+    "authentication": {
+      "enabled": true,
+      "method": "JWT",
+      "expiration": "24h",
+      "refresh": true
+    },
+    "authorization": {
+      "enabled": true,
+      "rbac": true,
+      "permissions": true
+    },
+    "rateLimiting": {
+      "enabled": true,
+      "window": "15m",
+      "max": 100
+    },
+    "cors": {
+      "enabled": true,
+      "origin": ["https://omnipreneur.vercel.app"],
+      "credentials": true
+    },
+    "helmet": {
+      "enabled": true,
+      "contentSecurityPolicy": true,
+      "hsts": true
+    },
+    "validation": {
+      "enabled": true,
+      "joi": true,
+      "sanitization": true
+    }
+  },
+  "performance": {
+    "caching": {
+      "enabled": true,
+      "redis": true,
+      "cdn": true,
+      "browser": true
+    },
+    "compression": {
+      "enabled": true,
+      "gzip": true,
+      "brotli": true
+    },
+    "optimization": {
+      "enabled": true,
+      "images": true,
+      "fonts": true,
+      "javascript": true,
+      "css": true
+    },
+    "monitoring": {
+      "enabled": true,
+      "realUserMonitoring": true,
+      "syntheticMonitoring": true,
+      "apm": true
+    }
+  },
+  "analytics": {
+    "userBehavior": {
+      "enabled": true,
+      "pageViews": true,
+      "clicks": true,
+      "scrolls": true,
+      "timeOnPage": true
+    },
+    "conversion": {
+      "enabled": true,
+      "signups": true,
+      "purchases": true,
+      "upgrades": true,
+      "downgrades": true
+    },
+    "funnel": {
+      "enabled": true,
+      "awareness": true,
+      "interest": true,
+      "consideration": true,
+      "intent": true,
+      "evaluation": true,
+      "purchase": true
+    },
+    "a_b_testing": {
+      "enabled": true,
+      "variants": true,
+      "statistical_significance": true,
+      "winner_detection": true
+    },
+    "personalization": {
+      "enabled": true,
+      "user_segments": true,
+      "dynamic_content": true,
+      "recommendations": true
+    }
+  },
+  "testing": {
+    "unit": {
+      "enabled": true,
+      "framework": "jest",
+      "coverage": 80,
+      "threshold": 70
+    },
+    "integration": {
+      "enabled": true,
+      "framework": "jest",
+      "database": true,
+      "api": true
+    },
+    "e2e": {
+      "enabled": true,
+      "framework": "cypress",
+      "browsers": ["chrome", "firefox", "safari"],
+      "mobile": true
+    },
+    "visual": {
+      "enabled": true,
+      "framework": "percy",
+      "screenshots": true,
+      "regression": true
+    },
+    "performance": {
+      "enabled": true,
+      "framework": "lighthouse",
+      "budget": true,
+      "thresholds": true
+    },
+    "accessibility": {
+      "enabled": true,
+      "framework": "axe-core",
+      "standards": ["WCAG2AA", "WCAG2A"],
+      "automated": true
+    },
+    "security": {
+      "enabled": true,
+      "framework": "snyk",
+      "vulnerability_scan": true,
+      "dependency_check": true
+    }
+  },
+  "deployment": {
+    "platform": "vercel",
+    "environments": {
+      "development": {
+        "url": "https://dev-omnipreneur.vercel.app",
+        "branch": "develop"
+      },
+      "staging": {
+        "url": "https://staging-omnipreneur.vercel.app",
+        "branch": "staging"
+      },
+      "production": {
+        "url": "https://omnipreneur.vercel.app",
+        "branch": "main"
+      }
+    },
+    "automation": {
+      "enabled": true,
+      "ci_cd": true,
+      "auto_deploy": true,
+      "rollback": true
+    },
+    "monitoring": {
+      "enabled": true,
+      "health_checks": true,
+      "error_tracking": true,
+      "performance_monitoring": true
+    }
+  }
+} 

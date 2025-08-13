@@ -1,0 +1,54 @@
+{
+  "sequentialThinking": {
+    "status": "✅ Working",
+    "details": "Tool available for use"
+  },
+  "fileSystem": {
+    "status": "✅ Working",
+    "details": "Read/write operations successful"
+  },
+  "codeRunner": {
+    "status": "✅ Working",
+    "details": "Code execution successful"
+  },
+  "notion": {
+    "status": "❌ Failed",
+    "error": "NOTION_TOKEN not set"
+  },
+  "typescript": {
+    "status": "❌ Not available",
+    "error": "Command failed: tsc --version\n'tsc' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "eslint": {
+    "status": "❌ Not available",
+    "error": "Command failed: eslint --version\n'eslint' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "prettier": {
+    "status": "❌ Not available",
+    "error": "Command failed: prettier --version\n'prettier' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "jest": {
+    "status": "❌ Not available",
+    "error": "Command failed: jest --version\n'jest' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  },
+  "git": {
+    "status": "✅ Working",
+    "version": "git version 2.50.0.windows.2"
+  },
+  "npm": {
+    "status": "✅ Working",
+    "version": "10.8.2"
+  },
+  "vercel": {
+    "status": "⚠️ Not configured",
+    "missing": "VERCEL_TOKEN"
+  },
+  "stripe": {
+    "status": "⚠️ Not configured",
+    "missing": "STRIPE_SECRET_KEY"
+  },
+  "sentry": {
+    "status": "⚠️ Not configured",
+    "missing": "SENTRY_AUTH_TOKEN"
+  }
+}

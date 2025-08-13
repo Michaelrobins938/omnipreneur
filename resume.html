@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .title {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .summary {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .company {
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .skill-category {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .skill-category h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .skill-list {
+            list-style: none;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .skill-list li {
+            margin-bottom: 4px;
+        }
+
+        .education-degree {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .school {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .print-only {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Name</h1>
+            <div class="title">Professional Title</div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📧</span>
+                    <span>your.email@example.com</span>
+                </div>
+                <div class="contact-item">
+                    <span>📱</span>
+                    <span>(555) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <span>📍</span>
+                    <span>City, State</span>
+                </div>
+                <div class="contact-item">
+                    <span>🔗</span>
+                    <span>linkedin.com/in/yourprofile</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Professional Summary</h2>
+                <div class="summary">
+                    Experienced professional with a proven track record of delivering exceptional results in [your field]. 
+                    Skilled in [key skill 1], [key skill 2], and [key skill 3] with a strong background in [industry/domain]. 
+                    Passionate about [relevant interest] and committed to continuous learning and professional development.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Professional Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="job-title">Senior Position Title</div>
+                    <div class="company">Company Name</div>
+                    <div class="date">January 2023 - Present</div>
+                    <div class="description">
+                        <ul>
+                            <li>Led and managed [specific project/initiative] resulting in [quantifiable outcome]</li>
+                            <li>Developed and implemented [specific strategy/process] that improved [metric] by [percentage]</li>
+                            <li>Collaborated with cross-functional teams to deliver [specific result]</li>
+                            <li>Mentored [number] team members and provided technical guidance on [specific area]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-title">Previous Position Title</div>
+                    <div class="company">Previous Company</div>
+                    <div class="date">March 2021 - December 2022</div>
+                    <div class="description">
+                        <ul>
+                            <li>Successfully completed [specific project] with [quantifiable results]</li>
+                            <li>Optimized [process/system] leading to [measurable improvement]</li>
+                            <li>Worked closely with [stakeholders] to ensure [specific outcome]</li>
+                            <li>Contributed to [team/company goal] by [specific action]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-title">Entry Level Position</div>
+                    <div class="company">First Company</div>
+                    <div class="date">June 2019 - February 2021</div>
+                    <div class="description">
+                        <ul>
+                            <li>Assisted with [specific responsibilities] and supported [team/project]</li>
+                            <li>Learned and applied [specific skills/technologies] in [context]</li>
+                            <li>Contributed to [specific project] by [specific contribution]</li>
+                            <li>Demonstrated strong [soft skill] and [technical skill] capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h4>Technical Skills</h4>
+                        <ul class="skill-list">
+                            <li>Skill 1</li>
+                            <li>Skill 2</li>
+                            <li>Skill 3</li>
+                            <li>Skill 4</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Software & Tools</h4>
+                        <ul class="skill-list">
+                            <li>Tool 1</li>
+                            <li>Tool 2</li>
+                            <li>Tool 3</li>
+                            <li>Tool 4</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Soft Skills</h4>
+                        <ul class="skill-list">
+                            <li>Leadership</li>
+                            <li>Communication</li>
+                            <li>Problem Solving</li>
+                            <li>Team Collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Education</h2>
+                <div class="education-item">
+                    <div class="education-degree">Bachelor of Science in [Field of Study]</div>
+                    <div class="school">University Name</div>
+                    <div class="date">Graduated: May 2019</div>
+                    <div class="description">
+                        Relevant coursework: [Course 1], [Course 2], [Course 3]<br>
+                        GPA: 3.8/4.0 (if applicable)
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Certifications & Awards</h2>
+                <div class="description">
+                    <ul>
+                        <li><strong>Certification Name</strong> - Issuing Organization (Year)</li>
+                        <li><strong>Award/Recognition</strong> - Awarding Organization (Year)</li>
+                        <li><strong>Professional Development</strong> - Course/Program (Year)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add any interactive functionality here if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can add JavaScript for any interactive features
+            console.log('Resume loaded successfully');
+        });
+    </script>
+</body>
+</html> 

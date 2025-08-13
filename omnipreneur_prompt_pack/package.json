@@ -1,0 +1,19 @@
+{
+  "name": "omnipreneur-prompt-pack",
+  "version": "1.0.0",
+  "description": "Omnipreneur Prompt Pack - Advanced AI Prompt Optimization Suite",
+  "main": "index.tsx",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "serve": "npx serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {},
+  "keywords": ["omnipreneur", "ai", "prompts", "optimization"],
+  "author": "Omnipreneur Team",
+  "license": "MIT"
+} 

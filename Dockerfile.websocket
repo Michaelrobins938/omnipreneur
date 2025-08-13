@@ -1,0 +1,50 @@
+# Separate WebSocket server Docker image
+FROM node:18-alpine AS base
+
+# Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Build stage
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Production stage
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 websocket
+
+# Copy files
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/scripts/start-websocket.js ./start-websocket.js
+
+# Switch to non-root user
+USER websocket
+
+# Expose WebSocket port
+EXPOSE 3001
+
+ENV WEBSOCKET_PORT=3001
+
+# Health check for WebSocket server
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "const WebSocket = require('ws'); const ws = new WebSocket('ws://localhost:3001'); ws.on('open', () => { ws.close(); process.exit(0); }); ws.on('error', () => process.exit(1));"
+
+# Start WebSocket server
+CMD ["node", "start-websocket.js"]

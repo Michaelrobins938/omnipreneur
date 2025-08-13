@@ -1,0 +1,974 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(USER)
+  ai_credits_remaining Int @default(1000)
+  emailVerified DateTime?
+  onboardingCompleted Boolean @default(false)
+  preferences Json?
+  avatar    String?  // Profile picture URL or base64 data
+  bio       String?  // User biography
+  company   String?  // User's company
+  website   String?  // User's website
+  location  String?  // User's location
+  timezone  String?  // User's timezone
+  language  String?  // User's preferred language
+  phone     String?  // User's phone number
+  twoFactorEnabled Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Referral tracking
+  referredBy      String?  // Affiliate code that referred this user
+  referralSource  String?  // Additional source tracking
+
+  // Subscription
+  subscription   Subscription?
+  
+  // Usage tracking
+  usage         Usage?
+  
+  // Product entitlements
+  entitlements  Entitlement[]
+  
+  // Generated content
+  rewrites      Rewrite[]
+  contentPieces ContentPiece[]
+  bundles       Bundle[]
+  affiliateLinks AffiliateLink[]
+  
+  // Payments
+  payments      Payment[]
+  invoices      Invoice[]
+  
+  // Analytics
+  events        Event[]
+
+  aiRequests   AIRequest[]
+  
+  // New product features
+  timeEntries    TimeEntry[]
+  tasks          Task[]
+  projects       Project[]
+  emailCampaigns EmailCampaign[]
+  invoicesGenerated InvoiceGenerated[]
+  seoAnalyses    SEOAnalysis[]
+
+  // Memory & Content Library
+  contentLibrary     ContentLibraryItem[]
+  contentFolders     ContentFolder[]
+  aiConversations    AIConversation[]
+  performanceMetrics PerformanceMetric[]
+  userPreferences    UserPreference[]
+
+  // Affiliate program relations
+  referrals       Referral[] @relation("UserReferrals")
+  affiliate       Affiliate?
+
+  @@map("users")
+}
+
+// Maps per-user access to individual products
+model Entitlement {
+  id         String   @id @default(cuid())
+  userId     String
+  productId  String
+  status     EntitlementStatus @default(ACTIVE)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("entitlements")
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  plan            Plan     @default(FREE)
+  status          SubscriptionStatus @default(ACTIVE)
+  stripeId        String?  @unique
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Usage {
+  id             String @id @default(cuid())
+  userId         String @unique
+  rewrites       Int    @default(0)
+  contentPieces  Int    @default(0)
+  bundles        Int    @default(0)
+  affiliateLinks Int    @default(0)
+  invoicesGenerated Int @default(0)
+  emailCampaigns Int    @default(0)
+  timeTracked    Int    @default(0) // in seconds
+  seoAnalyses    Int    @default(0)
+  aiRequestsUsed Int    @default(0)
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("usage")
+}
+
+model Rewrite {
+  id              String   @id @default(cuid())
+  userId          String
+  originalPrompt  String
+  optimizedPrompt String
+  style           String?
+  format          String?
+  context         String?
+  improvements    Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("rewrites")
+}
+
+model ContentPiece {
+  id             String   @id @default(cuid())
+  userId         String
+  niche          String
+  contentType    ContentType
+  tone           String
+  content        String
+  keywords       String[]
+  targetAudience String?
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("content_pieces")
+}
+
+model Bundle {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  price           Float
+  bundleType      BundleType
+  targetAudience  String
+  description     String?
+  products        String[]
+  pricingStrategy String?
+  bundleData      Json
+  salesCopy       Json?
+  marketingMaterials Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bundles")
+}
+
+model AffiliateLink {
+  id              String   @id @default(cuid())
+  userId          String
+  linkId          String   @unique
+  originalUrl     String
+  affiliateUrl    String
+  campaignName    String?
+  commissionRate  Float
+  optimizationData Json?
+  clicks          Int      @default(0)
+  conversions     Int      @default(0)
+  revenue         Float    @default(0)
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clicks_tracking ClickTracking[]
+
+  @@map("affiliate_links")
+}
+
+model ClickTracking {
+  id        String   @id @default(cuid())
+  linkId    String
+  referrer  String?
+  ip        String?
+  userAgent String?
+  timestamp DateTime @default(now())
+
+  affiliateLink AffiliateLink @relation(fields: [linkId], references: [linkId], onDelete: Cascade)
+
+  @@map("click_tracking")
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  stripeId        String   @unique
+  amount          Float
+  currency        String   @default("usd")
+  status          PaymentStatus
+  plan            Plan?
+  productName     String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  userId    String
+  stripeId  String   @unique
+  amount    Float
+  currency  String   @default("usd")
+  status    InvoiceStatus
+  dueDate   DateTime?
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  userId    String
+  event     String
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+  PREMIUM
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  UNPAID
+  TRIAL
+}
+
+enum ContentType {
+  SOCIAL
+  BLOG
+  EMAIL
+  VIDEO
+  MIXED
+}
+
+enum BundleType {
+  COURSE
+  TEMPLATE
+  TOOLKIT
+  MASTERCLASS
+  SOFTWARE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  REVOKED
+}
+
+// New product models
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  category    TimeCategory
+  description String
+  duration    Int      // Duration in seconds
+  startTime   DateTime
+  endTime     DateTime
+  projectId   String?
+  tags        String[]
+  createdAt   DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@map("time_entries")
+}
+
+// AI request/response logging
+model AIRequest {
+  id               String   @id @default(cuid())
+  userId           String
+  productId        String
+  inputTokens      Int?
+  outputTokens     Int?
+  modelUsed        String?
+  processingTimeMs Int?
+  success          Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aiOutput AIOutput?
+
+  @@map("ai_requests")
+}
+
+model AIOutput {
+  id         String   @id @default(cuid())
+  requestId  String   @unique
+  inputData  Json?
+  outputData Json?
+  qualityScore Float?
+  createdAt  DateTime @default(now())
+
+  request AIRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@map("ai_outputs")
+}
+
+model Project {
+  id           String         @id @default(cuid())
+  userId       String
+  name         String
+  description  String?
+  methodology  ProjectMethodology @default(AGILE)
+  status       ProjectStatus  @default(ACTIVE)
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  timeEntries TimeEntry[]
+
+  @@map("projects")
+}
+
+model Task {
+  id            String       @id @default(cuid())
+  userId        String
+  projectId     String
+  title         String
+  description   String?
+  status        TaskStatus   @default(TODO)
+  priority      TaskPriority @default(MEDIUM)
+  assigneeId    String?
+  dueDate       DateTime?
+  estimatedHours Float?
+  actualHours   Float?
+  tags          String[]
+  aiInsights    Json?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
+
+model EmailCampaign {
+  id              String           @id @default(cuid())
+  userId          String
+  name            String
+  type            EmailCampaignType
+  subject         String
+  content         String
+  status          EmailCampaignStatus @default(DRAFT)
+  recipientSegment String          @default("all")
+  recipientCount  Int?
+  fromName        String?
+  fromEmail       String?
+  replyTo         String?
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  openRate        Float?
+  clickRate       Float?
+  bounceRate      Float?
+  unsubscribeRate Float?
+  aiOptimizations Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_campaigns")
+}
+
+model InvoiceGenerated {
+  id              String   @id @default(cuid())
+  userId          String
+  invoiceNumber   String   @unique
+  clientName      String
+  clientEmail     String?
+  amount          Float
+  currency        String   @default("USD")
+  taxRate         Float    @default(0)
+  tax             Float
+  total           Float
+  description     String
+  template        InvoiceTemplate
+  status          GeneratedInvoiceStatus @default(PENDING)
+  dueDate         DateTime?
+  paidAt          DateTime?
+  pdfUrl          String?
+  paymentUrl      String?
+  items           Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("invoices_generated")
+}
+
+model SEOAnalysis {
+  id               String   @id @default(cuid())
+  userId           String
+  websiteUrl       String
+  targetKeyword    String?
+  overallScore     Int
+  technicalSEOScore Int
+  contentSEOScore  Int
+  backlinksCount   Int?
+  issues           Json?
+  recommendations  Json?
+  competitorData   Json?
+  keywordsData     Json?
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("seo_analyses")
+}
+
+// New Enums
+
+enum TimeCategory {
+  DEVELOPMENT
+  DESIGN
+  MARKETING
+  MEETINGS
+  RESEARCH
+  ADMIN
+}
+
+enum ProjectMethodology {
+  AGILE
+  SCRUM
+  WATERFALL
+  KANBAN
+  LEAN
+  HYBRID
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum EmailCampaignType {
+  WELCOME
+  NEWSLETTER
+  PROMOTIONAL
+  ABANDONED_CART
+  RE_ENGAGEMENT
+  PRODUCT_LAUNCH
+}
+
+enum EmailCampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  PAUSED
+  CANCELLED
+}
+
+enum InvoiceTemplate {
+  PROFESSIONAL
+  MODERN
+  MINIMAL
+  CREATIVE
+  CORPORATE
+  FREELANCE
+}
+
+enum GeneratedInvoiceStatus {
+  PENDING
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+// Platform Affiliate Program Models
+
+model Affiliate {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  affiliateCode   String   @unique
+  referralCode    String   @unique
+  status          AffiliateStatus @default(PENDING)
+  commissionRate  Float    @default(0.30) // 30% default commission
+  totalEarnings   Float    @default(0)
+  pendingEarnings Float    @default(0)
+  paidEarnings    Float    @default(0)
+  
+  // Marketing details
+  companyName     String?
+  website         String?
+  socialMedia     Json?    // {twitter, linkedin, youtube, etc}
+  audienceSize    Int?
+  niche           String?
+  marketingMethod String?  // content, paid ads, social, email, etc
+  
+  // Banking info for payouts
+  payoutMethod    PayoutMethod @default(PAYPAL)
+  paypalEmail     String?
+  bankDetails     Json?    // Encrypted bank account details
+  taxId           String?  // For 1099 reporting
+  
+  // Performance tracking
+  clicksGenerated Int      @default(0)
+  conversions     Int      @default(0)
+  conversionRate  Float    @default(0)
+  
+  // Approval & compliance
+  approvedAt      DateTime?
+  rejectedAt      DateTime?
+  rejectionReason String?
+  termsAcceptedAt DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referrals       Referral[]
+  commissions     Commission[]
+  payouts         AffiliatePayout[]
+  clicks          AffiliateClick[]
+
+  @@map("affiliates")
+}
+
+model Referral {
+  id              String   @id @default(cuid())
+  affiliateId     String
+  referredUserId  String   @unique // The user who was referred
+  subscriptionId  String?  // Their subscription when they convert
+  status          ReferralStatus @default(PENDING)
+  
+  // Tracking data
+  clickTimestamp  DateTime
+  signupTimestamp DateTime?
+  conversionTimestamp DateTime?
+  
+  // Attribution
+  referrerUrl     String?
+  landingPage     String?
+  userAgent       String?
+  ipAddress       String?
+  
+  // Commission data
+  subscriptionPlan String?  // PRO, ENTERPRISE, etc
+  subscriptionAmount Float? // Monthly recurring value
+  commissionAmount Float?   // Commission earned
+  commissionPaid   Boolean @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  referredUser    User @relation("UserReferrals", fields: [referredUserId], references: [id], onDelete: Cascade)
+
+  @@map("referrals")
+}
+
+model Commission {
+  id              String   @id @default(cuid())
+  affiliateId     String
+  referralId      String?  // Can be null for bonuses/adjustments
+  type            CommissionType
+  amount          Float
+  status          CommissionStatus @default(PENDING)
+  
+  // Subscription details
+  subscriptionId  String?
+  subscriptionPlan String?
+  recurringMonths Int @default(1) // How many months this commission covers
+  
+  // Payment tracking
+  paidAt          DateTime?
+  payoutId        String?
+  
+  description     String?
+  metadata        Json?    // Additional context
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@map("commissions")
+}
+
+model AffiliatePayout {
+  id              String   @id @default(cuid())
+  affiliateId     String
+  amount          Float
+  status          PayoutStatus @default(PENDING)
+  method          PayoutMethod
+  
+  // Payment details
+  transactionId   String?  // PayPal transaction ID, bank transfer reference, etc
+  fees            Float?   // Platform/payment processor fees
+  netAmount       Float?   // Amount after fees
+  
+  // Processing
+  processedAt     DateTime?
+  failureReason   String?
+  retryCount      Int @default(0)
+  
+  // Period this payout covers
+  periodStart     DateTime
+  periodEnd       DateTime
+  commissionsCount Int     // Number of commissions included
+  
+  metadata        Json?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@map("affiliate_payouts")
+}
+
+model AffiliateClick {
+  id              String   @id @default(cuid())
+  affiliateId     String
+  affiliateCode   String
+  
+  // Tracking data
+  ipAddress       String?
+  userAgent       String?
+  referrerUrl     String?
+  landingPage     String
+  
+  // Session tracking
+  sessionId       String?
+  fingerprint     String?  // Browser fingerprint for better attribution
+  
+  // Geographic data
+  country         String?
+  region          String?
+  city            String?
+  
+  // Conversion tracking
+  convertedUserId String?  // If this click led to a signup
+  conversionTime  DateTime?
+  
+  timestamp       DateTime @default(now())
+
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@map("affiliate_clicks")
+}
+
+// Note: User model updated above with referral tracking fields
+
+// Enums for affiliate program
+
+enum AffiliateStatus {
+  PENDING     // Applied but not yet approved
+  APPROVED    // Active affiliate
+  SUSPENDED   // Temporarily suspended
+  REJECTED    // Application rejected
+  TERMINATED  // Permanently terminated
+}
+
+enum ReferralStatus {
+  PENDING     // Click tracked, no signup yet
+  SIGNED_UP   // User signed up
+  CONVERTED   // User subscribed (commission eligible)
+  REFUNDED    // Subscription refunded
+  CANCELLED   // Subscription cancelled
+}
+
+enum CommissionType {
+  REFERRAL    // Standard referral commission
+  RECURRING   // Monthly recurring commission
+  BONUS       // Performance bonus
+  ADJUSTMENT  // Manual adjustment
+}
+
+enum CommissionStatus {
+  PENDING     // Commission earned but not yet paid
+  APPROVED    // Ready for payout
+  PAID        // Commission has been paid
+  CANCELLED   // Commission cancelled (refund, etc)
+  DISPUTED    // Under review
+}
+
+enum PayoutStatus {
+  PENDING     // Payout created but not processed
+  PROCESSING  // Being processed by payment system
+  COMPLETED   // Successfully paid
+  FAILED      // Payment failed
+  CANCELLED   // Payout cancelled
+}
+
+enum PayoutMethod {
+  PAYPAL
+  BANK_TRANSFER
+  STRIPE
+  CRYPTO
+  CHECK
+}
+
+// MEMORY SYSTEM MODELS
+
+// Content Library - Stores all generated content with metadata
+model ContentLibraryItem {
+  id              String   @id @default(cuid())
+  userId          String
+  
+  // Content Details
+  title           String
+  content         String   @db.Text
+  contentType     ContentLibraryType
+  productSource   String   // Which AI tool generated this
+  
+  // Metadata
+  tags            String[]
+  keywords        String[]
+  targetAudience  String?
+  niche           String?
+  
+  // Performance & Quality
+  qualityScore    Float?   // AI-assessed quality (0-1)
+  userRating      Int?     // User rating (1-5)
+  viewCount       Int      @default(0)
+  copyCount       Int      @default(0)
+  shareCount      Int      @default(0)
+  
+  // Context Data
+  originalPrompt  String?  @db.Text
+  contextData     Json?    // Additional metadata from generation
+  
+  // Organization
+  folderId        String?
+  isFavorited     Boolean  @default(false)
+  isArchived      Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastAccessedAt  DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder          ContentFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  
+  @@map("content_library")
+  @@index([userId, contentType])
+  @@index([userId, createdAt])
+  @@index([userId, qualityScore])
+}
+
+// Content folders for organization
+model ContentFolder {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  color     String?
+  parentId  String?
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    ContentFolder? @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  ContentFolder[] @relation("FolderHierarchy")
+  content   ContentLibraryItem[]
+  
+  @@map("content_folders")
+}
+
+// AI Conversation Memory - Context-aware chat history
+model AIConversation {
+  id              String   @id @default(cuid())
+  userId          String
+  
+  // Conversation Details
+  title           String?  // Auto-generated or user-set
+  productContext  String   // Which product/tool this conversation is for
+  sessionId       String?  // Groups related interactions
+  
+  // Conversation Data
+  messages        Json     // Array of message objects
+  context         Json?    // Persistent context data
+  
+  // Performance & Learning
+  qualityRating   Int?     // User feedback (1-5)
+  isSuccessful    Boolean? // Whether conversation achieved goal
+  learningData    Json?    // Data for AI improvement
+  
+  // Metadata
+  messageCount    Int      @default(0)
+  totalTokens     Int      @default(0)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastMessageAt   DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("ai_conversations")
+  @@index([userId, productContext])
+  @@index([userId, lastMessageAt])
+}
+
+// Performance Metrics - Track what works
+model PerformanceMetric {
+  id              String   @id @default(cuid())
+  userId          String
+  
+  // Context
+  productId       String   // Which AI tool
+  contentId       String?  // Related content if applicable
+  actionType      String   // What action was measured
+  
+  // Metrics
+  metricName      String   // e.g., "engagement_rate", "conversion_rate"
+  metricValue     Float
+  benchmark       Float?   // Comparison value
+  
+  // Context Data
+  metadata        Json?    // Additional context
+  tags            String[]
+  
+  // Performance Data
+  impressions     Int?
+  clicks          Int?
+  conversions     Int?
+  revenue         Float?
+  
+  // Timestamps
+  measuredAt      DateTime
+  createdAt       DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("performance_metrics")
+  @@index([userId, productId, actionType])
+  @@index([userId, measuredAt])
+}
+
+// User Preferences - Learn user patterns
+model UserPreference {
+  id              String   @id @default(cuid())
+  userId          String
+  
+  // Preference Details
+  category        String   // e.g., "content_style", "tone", "format"
+  key             String   // Specific preference key
+  value           String   // Preference value
+  confidence      Float    @default(0.5) // How confident we are (0-1)
+  
+  // Learning Data
+  sourceData      Json?    // How this preference was learned
+  usage_count     Int      @default(1)
+  lastUsed        DateTime @default(now())
+  
+  // Metadata
+  isExplicit      Boolean  @default(false) // User-set vs AI-learned
+  isActive        Boolean  @default(true)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, category, key])
+  @@map("user_preferences")
+  @@index([userId, category])
+}
+
+// Content Library Type Enum
+enum ContentLibraryType {
+  PROMPT          // Optimized prompts
+  SOCIAL_POST     // Social media content
+  BLOG_POST       // Blog articles
+  EMAIL           // Email content
+  BUNDLE          // Product bundles
+  AFFILIATE_LINK  // Affiliate marketing materials
+  REWRITE         // Content rewrites
+  CAMPAIGN        // Marketing campaigns
+  TEMPLATE        // Templates
+  IDEA            // Content ideas
+  OTHER           // Other content types
+} 
